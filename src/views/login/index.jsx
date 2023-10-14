@@ -31,6 +31,13 @@ const LoginPage = () => {
         const data = await response.json(); // Lee el contenido JSON de la respuesta
       console.log(data);
 
+      const expirationDate = new Date();
+      expirationDate.setMinutes(expirationDate.getMinutes() + 15);
+
+      const cookieExpiration = `expires=${expirationDate.toUTCString()}`;
+
+      document.cookie = `jwtToken=${data.token}; path=/; ${cookieExpiration}; secure`;
+
       } else {
         // Maneja errores de autenticación
         console.error('Error de inicio de sesión');
