@@ -1,13 +1,15 @@
 import { Avatar, Box, Button, CssBaseline, Grid, Link, Paper, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React, { useState } from 'react';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-// import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const defaultTheme = createTheme();
+
+  const navigate = useNavigate();
 
   const onchangeUser = (event) =>{
     setUsername(event.target.value);
@@ -31,12 +33,16 @@ const LoginPage = () => {
         const data = await response.json(); // Lee el contenido JSON de la respuesta
       console.log(data);
 
+      localStorage.setItem('user', JSON.stringify(data));
+      console.log('local',JSON.parse(localStorage.getItem('user')));
       const expirationDate = new Date();
-      expirationDate.setMinutes(expirationDate.getMinutes() + 15);
+      expirationDate.setMinutes(expirationDate.getTime() + 30 * 60 * 1000);
 
       const cookieExpiration = `expires=${expirationDate.toUTCString()}`;
 
       document.cookie = `jwtToken=${data.token}; path=/; ${cookieExpiration}; secure`;
+
+      navigate('/clientes');
 
       } else {
         // Maneja errores de autenticación
