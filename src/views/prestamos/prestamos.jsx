@@ -18,17 +18,6 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { withStyles } from "@mui/styles";
-
-const CustomTableCell = withStyles(() => ({
-    head: {
-        backgroundColor: '#00b6c2',
-        color: '#fff'
-    },
-    body: {
-        fontSize: 14
-    }
-}))(TableCell);
 
 function TablePaginationActions(props) {
     const theme = useTheme();
@@ -129,20 +118,20 @@ export default function Prestamos(){
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
       <TableHead sx={{ bgcolor: 'success.main' }} style={{ backgroundColor: '#BEBEBE' }}>
                     <TableRow>
-                        <CustomTableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Codigo</CustomTableCell>
-                        <CustomTableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Nombre</CustomTableCell>
-                        <CustomTableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Autor</CustomTableCell>
-                        <CustomTableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>
+                        <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Codigo</TableCell>
+                        <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Nombre</TableCell>
+                        <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Autor</TableCell>
+                        <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>
                             Editorial
-                        </CustomTableCell>
-                        <CustomTableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Genero</CustomTableCell>
-                        <CustomTableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Edicion</CustomTableCell>
+                        </TableCell>
+                        <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Genero</TableCell>
+                        <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Edicion</TableCell>
                     </TableRow>
                 </TableHead>
         <TableBody>
         {libros.length === 0 && (
                         <TableRow>
-                            <CustomTableCell component="td" colSpan={3}>
+                            <TableCell component="td" colSpan={3}>
                                 <Box
                                     sx={{
                                         p: 3,
@@ -154,7 +143,7 @@ export default function Prestamos(){
                                 >
                                    No hay libros disponibles en la sucursal
                                 </Box>
-                            </CustomTableCell>
+                            </TableCell>
                         </TableRow>
                     )}
 
@@ -163,24 +152,24 @@ export default function Prestamos(){
             : libros
           ).map((row) => (
             <TableRow key={row.name}>
-              <CustomTableCell component="th" scope="row">
+              <TableCell component="th" scope="row">
                 {row.codigo}
-              </CustomTableCell>
-              <CustomTableCell component="th" scope="row">
+              </TableCell>
+              <TableCell component="th" scope="row">
                 {row.nombre}
-              </CustomTableCell>
-              <CustomTableCell component="th" scope="row">
+              </TableCell>
+              <TableCell component="th" scope="row">
                 {row.autor}
-              </CustomTableCell>
-              <CustomTableCell component="th" scope="row">
+              </TableCell>
+              <TableCell component="th" scope="row">
                 {row.editorial.nombre}
-              </CustomTableCell>
-              <CustomTableCell component="th" scope="row">
+              </TableCell>
+              <TableCell component="th" scope="row">
                 {row.genero.nombre}
-              </CustomTableCell>
-              <CustomTableCell component="th" scope="row">
+              </TableCell>
+              <TableCell component="th" scope="row">
                 {row.edicion}
-              </CustomTableCell>
+              </TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (
