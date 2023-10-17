@@ -25,7 +25,6 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CustomModal from '../../components/CustomModal/index';
 import Swal from 'sweetalert2';
 import TablaDetallePrestamo from './detalleTable';
-import MaterialTable from "material-table";
 
 
 const stylesModal = {
@@ -460,10 +459,119 @@ export default function Prestamos() {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
-             <MaterialTable
-             columns={columnas}
-             data={libros}
-             />
+            <Paper>
+              <TableContainer>
+                <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+                  <TableHead sx={{ bgcolor: 'success.main' }} style={{ backgroundColor: '#BEBEBE' }}>
+                    <TableRow>
+                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Codigo</TableCell>
+                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Nombre</TableCell>
+                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Autor</TableCell>
+                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>
+                        Editorial
+                      </TableCell>
+                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Genero</TableCell>
+                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Edicion</TableCell>
+                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Acciones</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows.length === 0 && (
+                      <TableRow>
+                        <TableCell component="td" colSpan={3}>
+                          <Box
+                            sx={{
+                              p: 3,
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              fontSize: '1rem'
+                            }}
+                          >
+                            No hay libros disponibles en la sucursal
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    )}
+
+                    {(rowsPerPage > 0
+                      ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      : rows
+                    ).map((row) => (
+                      <TableRow key={row.codigo}>
+                        <TableCell component="th" scope="row">
+                          {row.codigo}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {row.nombre}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {row.autor}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {row.editorial.nombre}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {row.genero.nombre}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {row.edicion}
+                        </TableCell>
+
+                        <TableCell component="th" scope="row">
+                          <div style={{ justifyContent: 'center', display: 'flex', gap: '10px' }}>
+                            <CustomLoadingButton
+                              type="submit"
+                              startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
+                              variant="contained"
+                              style={{
+                                marginTop: 2,
+                                backgroundColor: '#ffce73',
+                                fontWeight: 'lighter',
+                                color: 'black',
+                                fontSize: '15px',
+                                height: '28px'
+                              }}
+                              onClick={() => agregarLibro(row)}
+
+                            >
+                              Añadir
+                            </CustomLoadingButton>
+
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TablePagination
+                        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                        colSpan={3}
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        SelectProps={{
+                          inputProps: {
+                            'aria-label': 'rows per page',
+                          },
+                          native: true,
+                        }}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActions}
+                      />
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </TableContainer>
+              </Paper>
+            
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
               <FormControl sx={{ height: '60px' }}>
