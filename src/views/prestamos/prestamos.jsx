@@ -13,6 +13,7 @@ import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { ThemeProvider, createTheme } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -25,6 +26,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CustomModal from '../../components/CustomModal/index';
 import Swal from 'sweetalert2';
 import TablaDetallePrestamo from './detalleTable';
+import MaterialTable from "material-table";
 
 
 const stylesModal = {
@@ -104,37 +106,25 @@ TablePaginationActions.propTypes = {
 };
 
 export default function Prestamos() {
+  const defaultMaterialTheme = createTheme();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [libros, setLibros] = React.useState([]);
   const [sedes, setSedes] = React.useState([]);
   const [sede, setSede] = React.useState(0);
-  const [rows, setRows] = React.useState(libros);
   const [detalle, setDetalle] = React.useState(false);
   const [arrDetalle, setArrDetalle] = React.useState([]);
   const [numero, setNumero] = React.useState('');
-  const [searched, setSearched] = React.useState('');
   const actual = new Date();
   const [retiro] = React.useState(actual.getDate() + 3);
   const [devolucion] = React.useState(actual.getDate() + 10);
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - libros.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  function requestSearch(searchedVal) {
-    const filteredRows = libros.filter((row) => {
-      return row.nombre.toLowerCase().includes(searchedVal.toLowerCase());
-    });
-    setRows(filteredRows);
-  }
-
-  function cancelSearch() {
-    setSearched("");
-    setRows(libros);
-  }
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -186,9 +176,6 @@ export default function Prestamos() {
     })();
   }, [sede]);
 
-  React.useEffect(() => {
-    setRows(libros);
-  }, [libros]);
 
 
   const onChangeSede = (event) => {
@@ -459,119 +446,56 @@ export default function Prestamos() {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
-            <Paper>
-              <TableContainer>
-                <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-                  <TableHead sx={{ bgcolor: 'success.main' }} style={{ backgroundColor: '#BEBEBE' }}>
-                    <TableRow>
-                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Codigo</TableCell>
-                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Nombre</TableCell>
-                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Autor</TableCell>
-                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>
-                        Editorial
-                      </TableCell>
-                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Genero</TableCell>
-                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Edicion</TableCell>
-                      <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }}>Acciones</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.length === 0 && (
-                      <TableRow>
-                        <TableCell component="td" colSpan={3}>
-                          <Box
-                            sx={{
-                              p: 3,
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              fontSize: '1rem'
-                            }}
-                          >
-                            No hay libros disponibles en la sucursal
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    )}
-
-                    {(rowsPerPage > 0
-                      ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      : rows
-                    ).map((row) => (
-                      <TableRow key={row.codigo}>
-                        <TableCell component="th" scope="row">
-                          {row.codigo}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {row.nombre}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {row.autor}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {row.editorial.nombre}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {row.genero.nombre}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {row.edicion}
-                        </TableCell>
-
-                        <TableCell component="th" scope="row">
-                          <div style={{ justifyContent: 'center', display: 'flex', gap: '10px' }}>
-                            <CustomLoadingButton
-                              type="submit"
-                              startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
-                              variant="contained"
-                              style={{
-                                marginTop: 2,
-                                backgroundColor: '#ffce73',
-                                fontWeight: 'lighter',
-                                color: 'black',
-                                fontSize: '15px',
-                                height: '28px'
-                              }}
-                              onClick={() => agregarLibro(row)}
-
-                            >
-                              Añadir
-                            </CustomLoadingButton>
-
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {emptyRows > 0 && (
-                      <TableRow style={{ height: 53 * emptyRows }}>
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-                  <TableFooter>
-                    <TableRow>
-                      <TablePagination
-                        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                        colSpan={3}
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        SelectProps={{
-                          inputProps: {
-                            'aria-label': 'rows per page',
-                          },
-                          native: true,
-                        }}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                      />
-                    </TableRow>
-                  </TableFooter>
-                </Table>
-              </TableContainer>
-              </Paper>
+            <div style={{ width: '100%', height: '100%' }}>
+                <link
+                    rel="stylesheet"
+                    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+                    />
+            <ThemeProvider theme={defaultMaterialTheme}>
+           <MaterialTable
+           columns={columnas}
+           data={libros}
+           title="Libros de la Sede"
+           actions={[
+            {icon: 'add',
+            tooltip: 'Agregar Libro',
+            onClick:(event,rowData)=> agregarLibro(rowData)
+          }
             
+           ]}
+           options={
+            {
+              actionsColumnIndex: -1
+            }
+           }
+           localization={{
+            header:{
+              actions: ''
+            },
+            pagination: {
+              firstAriaLabel: 'Primera página',
+              firstTooltip: 'Primera página',
+              labelDisplayedRows: '{from}-{to} de {count}',
+              labelRowsPerPage: 'Filas por página:',
+              labelRowsSelect: 'filas',
+              lastAriaLabel: 'Ultima página',
+              lastTooltip: 'Ultima página',
+              nextAriaLabel: 'Pagina siguiente',
+              nextTooltip: 'Pagina siguiente',
+              previousAriaLabel: 'Pagina anterior',
+              previousTooltip: 'Pagina anterior',
+            },
+            toolbar: {
+              searchPlaceholder: 'Buscar Libro'
+            },
+            body:{ emptyDataSourceMessage:
+            <h1 style={{ textAlign:'center'}}>No hay libros en la sede</h1> }
+           }}
+           
+           
+           />
+            </ThemeProvider>
+            </div>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
               <FormControl sx={{ height: '60px' }}>
