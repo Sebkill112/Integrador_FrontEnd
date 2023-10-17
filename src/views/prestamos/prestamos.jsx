@@ -5,14 +5,6 @@ import NavBar from "../../layouts/appBar";
 import http from "../../http";
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableFooter from '@mui/material/TableFooter';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import { ThemeProvider, createTheme } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
@@ -299,6 +291,50 @@ export default function Prestamos() {
     return [year, month, day].join('-');
   }
 
+  const registrarPrestamo = async () =>{
+
+
+      const user = JSON.parse(localStorage.getItem('user'));
+      const codigosArray = arrDetalle.map(item => ({ codigo: item.codigo }));
+
+    const data = {
+      prestamo: {
+        num_prestamo: numero,
+         fechaCreacion: formatDate(actual),
+        fechaSalida: formatDate(retiro),
+        fechaDevolucion: formatDate(devolucion),
+        estado: "Pendiente",
+        usuario: {
+          codigo: user.codigo
+        },
+        sede: {
+          codigo: sede
+        }
+      },
+      detallePrestamo: codigosArray
+    }
+
+    console.log(data)
+
+    try {
+      const response = await http.post('/api/prestamo/registro', data);
+
+      console.log('Response:', response.data);
+
+      Swal.fire({
+      icon: 'success',
+      title: 'Registro de Prestamo',
+      text: 'Registro exitoso',
+      timer: 2000
+    });
+    } catch (error) {
+      // Handle the error
+      console.error('Axios error:', error);
+    }
+    
+
+  };
+
   return (
     <>
       <NavBar />
@@ -532,6 +568,7 @@ export default function Prestamos() {
                     fontSize: '15px',
                     height: '28px'
                   }}
+                  onClick={registrarPrestamo}
 
                 >
                   Registrar Prestamo
