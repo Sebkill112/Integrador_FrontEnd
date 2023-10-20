@@ -6,13 +6,16 @@ import MantemientoClientes from './views/mantenimientos/clientes';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MantemientoSedes from './views/mantenimientos/sede';
 import Prestamos from './views/prestamos/prestamos';
+import Registro from './views/registro/registroCliente';
+
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      <Routes>
+      <Routes>  
       <Route path='/' exact element={<LoginPage/>}></Route>
+      <Route path='/registro' exact element={<Registro/>}></Route>
        <Route path='/clientes' exact element={<MantemientoClientes/>}></Route>
        <Route path='/sedes' exact element={<MantemientoSedes/>}></Route>
        <Route path='/prestamo' exact element={<Prestamos/>}></Route>

@@ -118,8 +118,8 @@ const LoginPage = () => {
               </Button>
               <Grid container>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <Link href="/registro" variant="body2">
+                    {"No tienes una cuenta? Registrate aquí"}
                   </Link>
                 </Grid>
               </Grid>

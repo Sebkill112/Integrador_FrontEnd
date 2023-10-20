@@ -569,7 +569,6 @@ export default function Prestamos() {
                     height: '28px'
                   }}
                   onClick={registrarPrestamo}
-
                 >
                   Registrar Prestamo
                 </CustomLoadingButton>
