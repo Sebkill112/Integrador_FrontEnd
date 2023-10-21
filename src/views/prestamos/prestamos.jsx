@@ -19,6 +19,7 @@ import CustomModal from '../../components/CustomModal/index';
 import Swal from 'sweetalert2';
 import TablaDetallePrestamo from './detalleTable';
 import MaterialTable from "material-table";
+import dayjs from "dayjs";
 
 
 const stylesModal = {
@@ -108,8 +109,8 @@ export default function Prestamos() {
   const [arrDetalle, setArrDetalle] = React.useState([]);
   const [numero, setNumero] = React.useState('');
   const actual = new Date();
-  const [retiro] = React.useState(actual.getDate() + 3);
-  const [devolucion] = React.useState(actual.getDate() + 10);
+  const [retiro] = React.useState(actual.setDate(actual.getDate()+3));
+  const [devolucion] = React.useState(actual.setDate(actual.getDate()+10));
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - libros.length) : 0;
 
@@ -300,9 +301,9 @@ export default function Prestamos() {
     const data = {
       prestamo: {
         num_prestamo: numero,
-         fechaCreacion: formatDate(actual),
-        fechaSalida: formatDate(retiro),
-        fechaDevolucion: formatDate(devolucion),
+         fechaCreacion: dayjs(actual).format('YYYY-MM-DD'),
+        fechaSalida: dayjs(retiro).format('YYYY-MM-DD'),
+        fechaDevolucion: dayjs(devolucion).format('YYYY-MM-DD'),
         estado: "Pendiente",
         usuario: {
           codigo: user.codigo
@@ -379,7 +380,7 @@ export default function Prestamos() {
                     name="fechaRetiro"
                     type="text"
                     label="Fecha Maxima de Retiro"
-                    value={formatDate(retiro)}
+                    value={dayjs(retiro).format('YYYY-MM-DD')}
                   />
                 </FlexBox>
 
@@ -395,7 +396,7 @@ export default function Prestamos() {
                     name="codigo"
                     type="text"
                     label="Fecha de Devolucion"
-                    value={formatDate(devolucion)}
+                    value={dayjs(devolucion).format('YYYY-MM-DD')}
                   />
                 </FlexBox>
 

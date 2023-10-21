@@ -7,6 +7,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MantemientoSedes from './views/mantenimientos/sede';
 import Prestamos from './views/prestamos/prestamos';
 import Registro from './views/registro/registroCliente';
+import Retiro from './views/retiros/index';
+import Devolucion from './views/devoluciones/index';
 
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
        <Route path='/clientes' exact element={<MantemientoClientes/>}></Route>
        <Route path='/sedes' exact element={<MantemientoSedes/>}></Route>
        <Route path='/prestamo' exact element={<Prestamos/>}></Route>
+       <Route path='/retiro' exact element={<Retiro/>}></Route>
+       <Route path='/devolucion' exact element={<Devolucion/>}></Route>
       </Routes>
       </BrowserRouter>
     </div>
