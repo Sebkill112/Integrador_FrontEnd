@@ -12,7 +12,7 @@ export default function MantemientoClientes(){
          <Box display={'flex'}>
         <Sidenavs />
         <Box component="main" sx={{flexGrow: 1, p: 3}}>
-        <h1>Clientes</h1>
+        <h1>Libros</h1>
         </Box>
         
         </Box>

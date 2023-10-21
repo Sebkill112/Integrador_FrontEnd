@@ -21,6 +21,11 @@ import MailIcon from '@mui/icons-material/Mail';
 import { useNavigate } from 'react-router-dom';
 import NavBar from './appBar';
 import { useAppStore } from './appStore';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import AddHomeWorkIcon from '@mui/icons-material/AddHomeWork';
+import BookIcon from '@mui/icons-material/Book';
+import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 
 const drawerWidth = 240;
 
@@ -93,7 +98,7 @@ export default function Sidenavs() {
         <Divider />
         <Divider />
         <List>
-        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=> navigate("/clientes")}>
+        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=> navigate("/libros")}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -108,9 +113,9 @@ export default function Sidenavs() {
                     justifyContent: 'center',
                   }}
                 >
-                  <MailIcon />
+                  <BookIcon />
                 </ListItemIcon>
-                <ListItemText primary="Clientes" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Libros" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding sx={{ display: 'block' }}  onClick={()=> navigate("/sedes")}>
@@ -128,7 +133,7 @@ export default function Sidenavs() {
                     justifyContent: 'center',
                   }}
                 >
-                  <MailIcon />
+                  <AddHomeWorkIcon />
                 </ListItemIcon>
                 <ListItemText primary="Sedes" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -148,7 +153,7 @@ export default function Sidenavs() {
                     justifyContent: 'center',
                   }}
                 >
-                  <MailIcon />
+                  <LibraryAddIcon />
                 </ListItemIcon>
                 <ListItemText primary="Prestamos" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -168,7 +173,7 @@ export default function Sidenavs() {
                     justifyContent: 'center',
                   }}
                 >
-                  <MailIcon />
+                  <BookmarkAddedIcon />
                 </ListItemIcon>
                 <ListItemText primary="Retiros" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -188,7 +193,7 @@ export default function Sidenavs() {
                     justifyContent: 'center',
                   }}
                 >
-                  <MailIcon />
+                  <BookmarkRemoveIcon />
                 </ListItemIcon>
                 <ListItemText primary="Devoluciones" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
