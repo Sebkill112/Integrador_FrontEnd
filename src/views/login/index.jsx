@@ -43,6 +43,7 @@ const LoginPage = () => {
       document.cookie = `jwtToken=${data.token}; path=/; ${cookieExpiration}; secure`;
 
       navigate('/libros');
+      navigate('/homepage');
 
       } else {
         // Maneja errores de autenticación

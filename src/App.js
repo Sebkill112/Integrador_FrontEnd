@@ -10,20 +10,22 @@ import Registro from './views/registro/registroCliente';
 import Retiro from './views/retiros/index';
 import Devolucion from './views/devoluciones/index';
 
+import HomePage from './views/home/homepage';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      <Routes>  
-      <Route path='/' exact element={<LoginPage/>}></Route>
-      <Route path='/registro' exact element={<Registro/>}></Route>
-       <Route path='/libros' exact element={<MantemientoClientes/>}></Route>
-       <Route path='/sedes' exact element={<MantemientoSedes/>}></Route>
-       <Route path='/prestamo' exact element={<Prestamos/>}></Route>
-       <Route path='/retiro' exact element={<Retiro/>}></Route>
-       <Route path='/devolucion' exact element={<Devolucion/>}></Route>
-      </Routes>
+        <Routes>
+          <Route path='/' exact element={<LoginPage />}></Route>
+          <Route path='/homepage' exact element={<HomePage />}></Route>
+          <Route path='/registro' exact element={<Registro />}></Route>
+          <Route path='/libros' exact element={<MantemientoClientes />}></Route>
+          <Route path='/sedes' exact element={<MantemientoSedes />}></Route>
+          <Route path='/prestamo' exact element={<Prestamos />}></Route>
+          <Route path='/retiro' exact element={<Retiro />}></Route>
+          <Route path='/devolucion' exact element={<Devolucion />}></Route>
+        </Routes>
       </BrowserRouter>
     </div>
   );
