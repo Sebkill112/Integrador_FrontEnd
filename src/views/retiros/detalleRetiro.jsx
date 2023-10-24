@@ -18,6 +18,7 @@ import CustomModal from '../../components/CustomModal/index';
 import Swal from 'sweetalert2';
 import ArticleIcon from '@mui/icons-material/Article';
 import DateRangeIcon from '@mui/icons-material/DateRange';
+import TablaDetalleRetiro from "./detalleTableRetiro";
 
 
 const stylesModal = {
@@ -99,9 +100,10 @@ TablePaginationActions.propTypes = {
 export default function DetalleRetiro(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { dataPrestamo } = props;
+  const { dataPrestamo, cerrarModal } = props;
   const [ejemplares, setEjemplares] = React.useState([]);
   const [libro, setLibro] = React.useState(0);
+  const [obsevacion, setObservacion] = React.useState('');
   const [detalle, setDetalle] = React.useState(false);
   const [arrDetalle, setArrDetalle] = React.useState([]);
 
@@ -110,6 +112,11 @@ export default function DetalleRetiro(props) {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const onChangeObservacion = (event) => {
+
+    setObservacion(event.target.value)
   };
 
 
@@ -133,7 +140,7 @@ export default function DetalleRetiro(props) {
 
   React.useEffect(() => {
     (async () => {
-      const response = await http.get(`/api/ejemplar/listado?libro=${libro}&sede=${dataPrestamo.sede?.codigo}&est=1`);
+      const response = await http.get(`/api/ejemplar/estado?libro=${libro}&sede=${dataPrestamo.sede?.codigo}`);
       setEjemplares(response.data);
 
     })();
@@ -147,7 +154,7 @@ export default function DetalleRetiro(props) {
     if (arrDetalle.length === 0) {
       const arrDocumentos = [];
       arrDocumentos.push({
-        row,
+        ejemplar: row,
         item: arrDocumentos.length + 1
       });
       setArrDetalle(arrDocumentos);
@@ -167,7 +174,7 @@ export default function DetalleRetiro(props) {
       const maxItem = arrDocumentos.map((doc) => doc.item);
       const maxI = Math.max(...maxItem);
 
-      const existingBook = arrDocumentos.find((libro) => libro.row.libroEjemplar.codigo === row.libroEjemplar.codigo);
+      const existingBook = arrDocumentos.find((libro) => libro.ejemplar.libroEjemplar.codigo === row.libroEjemplar.codigo);
 
       if (existingBook) {
         Swal.fire({
@@ -179,7 +186,7 @@ export default function DetalleRetiro(props) {
       } else {
         arrDocumentos.push({
 
-          row,
+          ejemplar: row,
           item: maxI + 1
         });
         setArrDetalle(arrDocumentos);
@@ -188,8 +195,8 @@ export default function DetalleRetiro(props) {
 
         Swal.fire({
           icon: 'success',
-          title: 'Registro de Riesgo',
-          text: 'Archivo Adjuntado',
+          title: 'Registro de Retiro',
+          text: 'Libro Adjuntado',
           timer: 2000
         });
       }
@@ -200,33 +207,99 @@ export default function DetalleRetiro(props) {
     setArrDetalle(arrDocumentos);
   };
 
-  const registrarPrestamo = async () => {
+ 
+
+  const registrarRetiro = async () => {
 
 
-    const data = {
-      prestamo: {
-        num_prestamo: dataPrestamo.num_prestamo,
-        estado: "Pendiente"
+
+    if (arrDetalle.length === 0) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Registro de Retiro',
+        text: 'Debe Adjuntar los libros',
+        timer: 2000
+      });
+    } else if (arrDetalle.length !== dataPrestamo.detallePrestamo.length) {
+      Swal.fire({
+        title: '¡Alerta!',
+        // eslint-disable-next-line no-useless-concat
+        html: `No adjunto algunos ejemplares detallados en el prestamo` + ' desea continuar?',
+        showCancelButton: true,
+        backdrop: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Si, continuar!'
+      }).then(async (result) => {
+        if (result.value) {
+
+          const itemArray = arrDetalle.map(item => ({ codigo: item.ejemplar }));
+          const data = {
+            estado: "Retirado",
+            codSede: dataPrestamo.sede.codigo,
+            numPrestamo: dataPrestamo.num_prestamo,
+            observacion: obsevacion,
+            ejemplares: itemArray
+          }
+    
+          console.log(data)
+
+          console.log(data)
+
+          // try {
+          //   const response = await http.post('/api/prestamo/registro', data);
+
+          //   console.log('Response:', response.data);
+
+          //   Swal.fire({
+          //   icon: 'success',
+          //   title: 'Registro de Prestamo',
+          //   text: 'Registro exitoso',
+          //   timer: 2000
+          // });
+          // } catch (error) {
+          //   // Handle the error
+          //   console.error('Axios error:', error);
+          // }
+        }
+      });
+    } else {
+
+      const itemArray = arrDetalle.map(item => ( item.ejemplar ));
+      const data = {
+        estado: "Retirado",
+        codSede: dataPrestamo.sede.codigo,
+        numPrestamo: dataPrestamo.num_prestamo,
+        observacion: obsevacion,
+        ejemplares: itemArray
       }
+
+      console.log(data)
+
+      try {
+        const response = await http.put(`/api/prestamo/retiro/${dataPrestamo.codigo}` , data);
+
+        console.log('Response:', response.data);
+        
+        Swal.fire({
+        icon: 'success',
+        title: 'Registro de Retiro',
+        text: 'Registro exitoso',
+        timer: 2000
+      });
+
+      
+      } catch (error) {
+        // Handle the error
+        console.error('Axios error:', error);
+      }
+
+      cerrarModal(false)
+
     }
 
-    console.log(data)
 
-    // try {
-    //   const response = await http.post('/api/prestamo/registro', data);
-
-    //   console.log('Response:', response.data);
-
-    //   Swal.fire({
-    //   icon: 'success',
-    //   title: 'Registro de Prestamo',
-    //   text: 'Registro exitoso',
-    //   timer: 2000
-    // });
-    // } catch (error) {
-    //   // Handle the error
-    //   console.error('Axios error:', error);
-    // }
 
 
   };
@@ -324,9 +397,9 @@ export default function DetalleRetiro(props) {
                   onChange={onChangeLibro}
                 >
                   <MenuItem key={0} value={0}>
-                      [Seleccione libro]
-                    </MenuItem>
-                  {dataPrestamo.detallePrestamo.map((item) => (
+                    [Seleccione libro]
+                  </MenuItem>
+                  {dataPrestamo.detallePrestamo?.map((item) => (
                     <MenuItem key={item.libro?.codigo} value={item.libro?.codigo}>
                       {item.libro?.nombre}
                     </MenuItem>
@@ -335,6 +408,27 @@ export default function DetalleRetiro(props) {
                 </TextField>
               </FlexBox>
 
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <FormControl sx={{ height: '60px' }}>
+              <CustomLoadingButton
+                type="submit"
+                startIcon={<LoupeIcon sx={{ height: '15px' }} />}
+                variant="contained"
+                style={{
+                  marginTop: 2,
+                  backgroundColor: '#ffce73',
+                  fontWeight: 'lighter',
+                  color: 'black',
+                  fontSize: '15px',
+                  height: '28px'
+                }}
+                onClick={handleOpenDetalle}
+
+              >
+                Ver Detalle
+              </CustomLoadingButton>
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
@@ -426,7 +520,28 @@ export default function DetalleRetiro(props) {
             </Paper>
 
           </Grid>
-          <Grid item xs={12} sm={12} md={6}>
+
+          <Grid item xs={12} sm={12} md={4}>
+            <FormControl sx={{ height: '60px' }} fullWidth>
+              <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                <ArticleIcon color="primary" fontSize="large" />
+                <TextField
+                  fullWidth
+                  size="small"
+                  name="codigo"
+                  multiline
+                  minRows={2}
+                  maxRows={3}
+                  type="text"
+                  label="Observacion"
+                  value={obsevacion}
+                  onChange={onChangeObservacion}
+                />
+              </FlexBox>
+
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
             <FormControl sx={{ height: '60px' }}>
               <CustomLoadingButton
                 type="submit"
@@ -440,28 +555,7 @@ export default function DetalleRetiro(props) {
                   fontSize: '15px',
                   height: '28px'
                 }}
-                onClick={handleOpenDetalle}
-
-              >
-                Ver Detalle
-              </CustomLoadingButton>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            <FormControl sx={{ height: '60px' }}>
-              <CustomLoadingButton
-                type="submit"
-                startIcon={<LoupeIcon sx={{ height: '15px' }} />}
-                variant="contained"
-                style={{
-                  marginTop: 2,
-                  backgroundColor: '#ffce73',
-                  fontWeight: 'lighter',
-                  color: 'black',
-                  fontSize: '15px',
-                  height: '28px'
-                }}
-                onClick={registrarPrestamo}
+                onClick={registrarRetiro}
               >
                 Registrar Retiro
               </CustomLoadingButton>
@@ -486,8 +580,7 @@ export default function DetalleRetiro(props) {
           <Grid container spacing={2} justifyContent="center" alignItems="center">
 
             <Grid item xs={12} sm={12} md={12}>
-
-              <h1>Hola</h1>
+              <TablaDetalleRetiro propiedades={arrDetalle} datahijo={dataDetalle} />
             </Grid>
 
           </Grid>

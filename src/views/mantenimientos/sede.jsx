@@ -14,7 +14,6 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { useTheme } from '@mui/material/styles';
 import { FlexBox } from "../../components/Containers";
 import ApartmentIcon from '@mui/icons-material/Apartment';
-import TablaDetalleSede from './detalleSede';
 import CustomModal from "../../components/CustomModal";
 import MaterialTable from "material-table";
 import { ThemeProvider } from '@mui/material';
@@ -414,8 +413,6 @@ const handleOpenDetalle = () => {
           <Grid container spacing={2} justifyContent="center" alignItems="center">
 
             <Grid item xs={12} sm={12} md={12}>
-
-              <TablaDetalleSede propiedades={arrDetalle} datahijo={dataDetalle} />
             </Grid>
 
           </Grid>

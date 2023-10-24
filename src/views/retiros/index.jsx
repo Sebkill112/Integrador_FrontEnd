@@ -35,6 +35,12 @@ export default function Devoluciones(){
         })();
       }, []);
 
+      const handleCloseModalRetiro = async (boleean) => {
+        setDetalle(boleean);
+        const response = await http.get(`/api/prestamo/listarPorEstado/Pendiente`);
+                setPrestamos(response.data);
+          
+    };
 
     const columnas = [
 
@@ -153,7 +159,7 @@ export default function Devoluciones(){
                     }}
                 >
                     <MainCard>
-                       <DetalleRetiro dataPrestamo={prestamo}/>
+                       <DetalleRetiro dataPrestamo={prestamo} cerrarModal={handleCloseModalRetiro}/>
                     </MainCard>
                 </div>
             </FullScreenDialog>
