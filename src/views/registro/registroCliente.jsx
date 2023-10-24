@@ -13,7 +13,12 @@ import {
   Typography,
   createTheme,
 } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import BadgeIcon from '@mui/icons-material/Badge';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import HomeIcon from '@mui/icons-material/Home';
+import EmailIcon from '@mui/icons-material/Email';
+import PasswordIcon from '@mui/icons-material/Password';
 import { useNavigate } from 'react-router-dom';
 import { FlexBox } from '../../components/Containers';
 import ApartmentIcon from '@mui/icons-material/Apartment';
@@ -199,7 +204,7 @@ const Registro = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundImage: 'url(https://images.pexels.com/photos/11799244/pexels-photo-11799244.jpeg)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -217,19 +222,19 @@ const Registro = () => {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
+            <Avatar sx={{ m: 1, bgcolor: 'success.main', width: 90, height: 90}}>
+              <AccountCircleIcon sx={{m: 1, width: 80, height: 80}} />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Ingreso
+              Registro
             </Typography>
             <form onSubmit={formik.handleSubmit}>
               <Box sx={{ mt: 1 }}>
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item xs={12} sm={12} md={10}>
-                    <FormControl sx={{ height: '60px' }} fullWidth>
+                    <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                        <ApartmentIcon color="primary" fontSize="large" />
+                        <BadgeIcon color="primary" fontSize="large" />
                         <TextField
                           margin="normal"
                           required
@@ -251,9 +256,9 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                    <FormControl sx={{ height: '60px' }} fullWidth>
+                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                        <ApartmentIcon color="primary" fontSize="large" />
+                        <DriveFileRenameOutlineIcon color="primary" fontSize="large" />
                         <TextField
                           margin="normal"
                           required
@@ -273,9 +278,9 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                    <FormControl sx={{ height: '60px' }} fullWidth>
+                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                        <ApartmentIcon color="primary" fontSize="large" />
+                        <DriveFileRenameOutlineIcon color="primary" fontSize="large" />
                         <TextField
                           margin="normal"
                           required
@@ -296,9 +301,9 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                    <FormControl sx={{ height: '60px' }} fullWidth>
+                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                        <ApartmentIcon color="primary" fontSize="large" />
+                        <HomeIcon color="primary" fontSize="large" />
                         <TextField
                           margin="normal"
                           required
@@ -318,9 +323,9 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                    <FormControl sx={{ height: '60px' }} fullWidth>
+                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                        <ApartmentIcon color="primary" fontSize="large" />
+                        <EmailIcon color="primary" fontSize="large" />
                         <TextField
                           margin="normal"
                           required
@@ -342,9 +347,9 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                    <FormControl sx={{ height: '60px' }} fullWidth>
+                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                        <ApartmentIcon color="primary" fontSize="large" />
+                        <AccountCircleIcon color="primary" fontSize="large" />
                         <TextField
                           margin="normal"
                           required
@@ -365,9 +370,9 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                    <FormControl sx={{ height: '60px' }} fullWidth>
+                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                        <ApartmentIcon color="primary" fontSize="large" />
+                        <PasswordIcon color="primary" fontSize="large" />
                         <TextField
                           margin="normal"
                           required
@@ -389,12 +394,18 @@ const Registro = () => {
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={6}>
-                    <FormControl sx={{ height: '60px' }} fullWidth>
+                  <FormControl sx={{ height: '60px' , marginTop: 3}} fullWidth>
                       <Button
                         type="submit"
                         variant="contained"
                         onClick={registrarRegistro}
                         disabled={areAllFieldsEmpty() || !formik.isValid}
+                        sx={{ backgroundColor: 'success.main', color: 'white', 
+                        '&:hover': {
+                          backgroundColor: '#33cc33', // Cambia 'lightgreen' al color deseado
+                        }
+                      
+                        }}
                       >
                         Registrar
                       </Button>
