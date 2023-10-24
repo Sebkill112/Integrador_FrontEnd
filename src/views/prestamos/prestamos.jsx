@@ -234,7 +234,7 @@ export default function Prestamos() {
       Swal.fire({
         icon: 'success',
         title: 'Registro de Riesgo',
-        text: 'Archivo Adjuntado',
+        text: 'Libro Adjuntado',
         timer: 2000
       });
     } else {

@@ -1,343 +1,420 @@
-import { Avatar, Box, Button, CssBaseline, FormControl, Grid, Link, Paper, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {
+  Avatar,
+  Box,
+  Button,
+  CssBaseline,
+  FormControl,
+  Grid,
+  Link,
+  Paper,
+  TextField,
+  ThemeProvider,
+  Typography,
+  createTheme,
+} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate } from 'react-router-dom';
 import { FlexBox } from '../../components/Containers';
 import ApartmentIcon from '@mui/icons-material/Apartment';
-import http from '../../http';
-import Swal from 'sweetalert2';
-import CustomLoadingButton from '../../components/Button/LoadingButton';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import axios from 'axios';
-
-import { FormControlLabel } from '@mui/material';
-// import { useTheme } from '@mui/material/styles';
-import { useTheme } from '@mui/material/styles';
-
-
-
+import { useFormik } from 'formik';
+import Swal from 'sweetalert2';
 
 const Registro = () => {
-  const theme = useTheme();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [dni, setDni] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [password, setPassword] = useState('');
 
-    const [username, setUsername] = useState('');
-    const [dni, setDni] = useState('');
-    const [nombre, setNombre] = useState('');
-    const [apellido, setApellido] = useState('');
-    const [direccion, setDireccion] = useState('');
-    const [correo, setCorreo] = useState('');
+  const validate = (values) => {
+    const errors = {};
 
-
-    const [password, setPassword] = useState('');
-
-    const defaultTheme = createTheme();
-
-    const navigate = useNavigate();
-
-    const onchangeDni = (event) =>{
-      setDni(event.target.value);
-  }
-    const onchangeNombre = (event) =>{
-      setNombre(event.target.value);
-  }
-    const onchangeApellido = (event) =>{
-      setApellido(event.target.value);
-  }
-    const onchangeDireccion = (event) =>{
-      setDireccion(event.target.value);
-  }
-
-    const onchangeCorreo = (event) =>{
-      setCorreo(event.target.value);
-  }
-
-    const onchangeUser = (event) =>{
-        setUsername(event.target.value);
+    if (!values.dni) {
+      errors.dni = 'El campo DNI es obligatorio';
+    } else if (!/^\d{8}$/.test(values.dni)) {
+      errors.dni = 'El DNI debe contener exactamente 8 números';
     }
 
-    const onchangePass = (event) =>{
-        setPassword(event.target.value);
+    if (!values.direccion) {
+      errors.direccion = 'El campo Direccion es obligatorio';
+    } else if (values.direccion.length < 2 || values.direccion.length > 40) {
+      errors.direccion = 'La dirección debe tener entre 2 y 40 caracteres';
     }
-    const limpiarInput = () => {
-      setPassword('');
-      setUsername('');
-      setCorreo('');
-      setDireccion('');
-      setApellido('');
-      setNombre('');
-      setDni('');
+
+    if (!values.nombre) {
+      errors.nombre = 'El campo Nombre es obligatorio';
+    } else if (values.nombre.length < 2 || values.nombre.length > 40) {
+      errors.nombre = 'El nombre debe tener entre 2 y 40 caracteres';
+    }
+
+    if (!values.apellido) {
+      errors.apellido = 'El campo Apellido es obligatorio';
+    } else if (values.apellido.length < 2 || values.apellido.length > 40) {
+      errors.apellido = 'El apellido debe tener entre 2 y 40 caracteres';
+    }
+
+    if (!values.correo) {
+      errors.correo = 'El campo Correo es obligatorio';
+    } else if (!/^\S+@\S+\.\S+$/.test(values.correo)) {
+      errors.correo = 'El correo no tiene el formato válido';
+    }
+
+    if (!values.username) {
+      errors.username = 'El campo Usuario es obligatorio'; 
+    } else if (values.username.length < 2 || values.username.length > 40) {
+      errors.username = 'El usuario debe tener entre 2 y 40 caracteres';
+    }
+
+    if (!values.password) {
+      errors.password = 'El campo Password es obligatorio'; 
+    } else if (values.password.length < 2 || values.password.length > 40) {
+      errors.password = 'El password debe tener entre 2 y 40 caracteres';
+    }
+
+    return errors;
   };
 
-        const registrarRegistro = async () =>{
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+
+  const areAllFieldsValid = () => {
+    const errorValues = Object.values(formik.errors);
+
+    const allFieldsFilled = Object.values(formik.values).every((value) => {
+      return typeof value === 'string' && value.trim() !== '';
+    });
+
+    const noErrors = errorValues.every((error) => !error);
+
+    const allFieldsValid = allFieldsFilled && noErrors;
+    setIsButtonDisabled(!allFieldsValid);
+    return allFieldsValid;
+  };
+
+  const areAllFieldsEmpty = () => {
+    const formValues = Object.values(formik.values);
+    return formValues.every(value => {
+      if (typeof value === 'string') {
+        return value.trim() === '';
+      }
+      return true; // Si no es una cadena, considerarlo como lleno
+    });
+  };
+
+
+  const updateButtonStatus = () => {
+    const allFieldsValid = areAllFieldsValid();
+    setIsButtonDisabled(!allFieldsValid);
+  };
 
 
 
-        const data = {
-          
-          dni: dni,
-          nombre: nombre,
-          apellido: apellido ,
-          direccion: direccion ,
-          correo: correo,
-          username: username,
-          password: password,
-          rol: 2
+  const formik = useFormik({
+    initialValues: {
+      dni: '',
+      nombre: '',
+      apellido: '',
+      direccion: '',
+      correo: '',
+      username: '',
+      password: '',
+    },
+    validate,
+    onSubmit: (values) => {
+      // Coloca aquí la lógica de envío de datos si los campos son válidos
+      // Puedes acceder a los valores válidos a través de `values`
+      console.log(values);
+    },
+  });
+
+  useEffect(() => {
+    formik.isValid && formik.submitCount > 0 && formik.isValidating && formik.submitForm();
+  }, [formik]);
+
+  // const limpiarInput = () => {
+  //   formik.resetForm();
+  // };
+
+  // const limpiarInput = () => {
+  //     setPassword('');
+  //     setUsername('');
+  //     setCorreo('');
+  //     setDireccion('');
+  //     setApellido('');
+  //     setNombre('');
+  //     setDni('');
+  // };
+
+  const registrarRegistro = async () => {
+    const data = {
+      dni: formik.values.dni,
+      nombre: formik.values.nombre,
+      apellido: formik.values.apellido,
+      direccion: formik.values.direccion,
+      correo: formik.values.correo,
+      username: formik.values.username,
+      password: formik.values.password,
+      rol: 2
+    };
+
+    console.log(data);
+
+    await axios.post('http://localhost:8090/auth/register', data)
+      .then((response) => {
+        if (response.status === 200) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Registro de Usuario',
+            text: 'Registro exitoso',
+            timer: 2000
+          });
+          formik.resetForm();
         }
+      })
+      .catch((error) => {
+        if (error.response.status === 400) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Registro de Usuario',
+            text: `Error: ${error.response.data}`,
+          });
+        }
+      });
+    formik.handleSubmit();
+  };
 
-        console.log(data)
-
-        await axios.post('http://localhost:8090/auth/register', data)
-        .then((response) => {
-          if (response.status === 200) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Registro de Usuario',
-              text: 'Registro exitoso',
-              timer: 2000
-            });
-            limpiarInput()
-          }
-        })
-        .catch((error) => {
-          if (error.response.status === 400) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Registro de Usuario',
-              text: `Error: ${error.response.data}`,
-            });
-          }
-        });
-
-          // console.log('Response:', response.data);
-
-          // if (response.status === 200) {
-          //   // Request was successful, show a success message
-          //   console.log('Response:', response.data);
-          //   Swal.fire({
-          //     icon: 'success',
-          //     title: 'Registro de Usuario',
-          //     text: 'Registro exitoso',
-          //     timer: 2000
-          //   });
-          // } else {
-          //   // Request had a 400 status, show an error message
-          //   console.error('Request failed with status:', response.status);
-          //   Swal.fire({
-          //     icon: 'error',
-          //     title: 'Registro de Usuario',
-          //     text:  `Error:${response.data}`,
-          //   });
-          // }
-        
-        
-
-      };
-
-      
-
-    return (
-      
-        <ThemeProvider theme={defaultTheme}>
-        <Grid container component="main" sx={{ height: '100vh' }}>
-          <CssBaseline />
-          <Grid
-            item
-            xs={false}
-            sm={4}
-            md={7}
+  return (
+    <ThemeProvider theme={createTheme()}>
+      <Grid container component="main" sx={{ height: '100vh' }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
+          sx={{
+            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
             sx={{
-              backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-              backgroundRepeat: 'no-repeat',
-              backgroundColor: (t) =>
-                t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
             }}
-          />
-          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-            <Box
-              sx={{
-                my: 8,
-                mx: 4,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                Ingreso 
-              </Typography>
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Ingreso
+            </Typography>
+            <form onSubmit={formik.handleSubmit}>
               <Box sx={{ mt: 1 }}>
                 <Grid container spacing={2} justifyContent="center">
+                  <Grid item xs={12} sm={12} md={10}>
+                    <FormControl sx={{ height: '60px' }} fullWidth>
+                      <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                        <ApartmentIcon color="primary" fontSize="large" />
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="dni"
+                          name="dni"
+                          label="DNI"
+                          type="number"
+                          value={formik.values.dni}
+                          onChange={(e) => {
+                            formik.handleChange(e);
+                            updateButtonStatus(); // Call this function when the value changes
+                          }}
+                          onBlur={formik.handleBlur}
+                          error={formik.touched.dni && Boolean(formik.errors.dni)}
+                          helperText={formik.touched.dni ? formik.errors.dni : ''}
+                        />
+                      </FlexBox>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={10}>
+                    <FormControl sx={{ height: '60px' }} fullWidth>
+                      <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                        <ApartmentIcon color="primary" fontSize="large" />
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="nombre"
+                          name="nombre"
+                          label="Nombre"
+                          value={formik.values.nombre}
+                          onChange={(e) => {
+                            formik.handleChange(e);
+                            updateButtonStatus(); // Call this function when the value changes
+                          }} onBlur={formik.handleBlur}
+                          error={formik.touched.nombre && Boolean(formik.errors.nombre)}
+                          helperText={formik.touched.nombre ? formik.errors.nombre : ''}
+                        />
+                      </FlexBox>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={10}>
+                    <FormControl sx={{ height: '60px' }} fullWidth>
+                      <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                        <ApartmentIcon color="primary" fontSize="large" />
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="apellido"
+                          name="apellido"
+                          label="Apellido"
+                          value={formik.values.apellido}
+                          onChange={(e) => {
+                            formik.handleChange(e);
+                            updateButtonStatus(); // Call this function when the value changes
+                          }} onBlur={formik.handleBlur}
+                          error={formik.touched.apellido && Boolean(formik.errors.apellido)}
+                          helperText={formik.touched.apellido ? formik.errors.apellido : ''}
+                        />
+                      </FlexBox>
 
-                <Grid item xs={12} sm={12} md={10}>
-              <FormControl sx={{ height: '60px' }} fullWidth>
-                <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                  <ApartmentIcon color="primary" fontSize="large" />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  value={dni}
-                  label="DNI"
-                  type="number"
-                  name="username"
-                  onChange={onchangeDni}
-                />
-                 </FlexBox>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={10}>
+                    <FormControl sx={{ height: '60px' }} fullWidth>
+                      <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                        <ApartmentIcon color="primary" fontSize="large" />
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="direccion"
+                          name="direccion"
+                          label="Direccion"
+                          value={formik.values.direccion}
+                          onChange={(e) => {
+                            formik.handleChange(e);
+                            updateButtonStatus(); // Call this function when the value changes
+                          }} onBlur={formik.handleBlur}
+                          error={formik.touched.direccion && Boolean(formik.errors.direccion)}
+                          helperText={formik.touched.direccion ? formik.errors.direccion : ''}
+                        />
+                      </FlexBox>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={10}>
+                    <FormControl sx={{ height: '60px' }} fullWidth>
+                      <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                        <ApartmentIcon color="primary" fontSize="large" />
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="correo"
+                          name="correo"
+                          label="Correo"
+                          type="email"
+                          value={formik.values.correo}
+                          onChange={(e) => {
+                            formik.handleChange(e);
+                            updateButtonStatus(); // Call this function when the value changes
+                          }} onBlur={formik.handleBlur}
+                          error={formik.touched.correo && Boolean(formik.errors.correo)}
+                          helperText={formik.touched.correo ? formik.errors.correo : ''}
+                        />
+                      </FlexBox>
 
-            </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' }} fullWidth>
-                    <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                      <ApartmentIcon color="primary" fontSize="large" />
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      value={nombre}
-                      label="Nombre"
-                      name="username"
-                      onChange={onchangeNombre}
-                    />
-                    </FlexBox>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={10}>
+                    <FormControl sx={{ height: '60px' }} fullWidth>
+                      <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                        <ApartmentIcon color="primary" fontSize="large" />
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="username"
+                          name="username"
+                          label="Usuario"
+                          value={formik.values.username}
+                          onChange={(e) => {
+                            formik.handleChange(e);
+                            updateButtonStatus(); // Call this function when the value changes
+                          }} onBlur={formik.handleBlur}
+                          error={formik.touched.username && Boolean(formik.errors.username)}
+                          helperText={formik.touched.username ? formik.errors.username : ''}
+                        />
+                      </FlexBox>
 
-                </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' }} fullWidth>
-                    <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                      <ApartmentIcon color="primary" fontSize="large" />
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      value={apellido}
-                      label="Apellido"
-                      name="username"
-                      onChange={onchangeApellido}
-                    />
-                    </FlexBox>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={10}>
+                    <FormControl sx={{ height: '60px' }} fullWidth>
+                      <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                        <ApartmentIcon color="primary" fontSize="large" />
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          name="password"
+                          label="Password"
+                          type="password"
+                          value={formik.values.password}
+                          onChange={(e) => {
+                            formik.handleChange(e);
+                            updateButtonStatus(); // Call this function when the value changes
+                          }} onBlur={formik.handleBlur}
+                          error={formik.touched.password && Boolean(formik.errors.password)}
+                          helperText={formik.touched.password ? formik.errors.password : ''}
+                        />
+                      </FlexBox>
 
-                </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' }} fullWidth>
-                    <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                      <ApartmentIcon color="primary" fontSize="large" />
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      value={direccion}
-                      label="Direccion"
-                      name="username"
-                      onChange={onchangeDireccion}
-                    />
-                    </FlexBox>
+                    </FormControl>
+                  </Grid>
 
-                </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' }} fullWidth>
-                    <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                      <ApartmentIcon color="primary" fontSize="large" />
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      value={correo}
-                      label="Correo"
-                      type="email"
-                      name="username"
-                      onChange={onchangeCorreo}
-                    />
-                    </FlexBox>
-
-                </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={12} md={10}>
-                <FormControl sx={{ height: '60px' }} fullWidth>
-                  <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                    <ApartmentIcon color="primary" fontSize="large" />
-                    <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    value={username}
-                    label="Usuario"
-                    name="username"
-                    onChange={onchangeUser}
-                  />
-                  </FlexBox>
-
-                </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' }} fullWidth>
-                    <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                      <ApartmentIcon color="primary" fontSize="large" />
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
-                      type="password"
-                      value={password}
-                      onChange={onchangePass}
-                    />
-                    </FlexBox>
-
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={12} md={6}>
-                <FormControl sx={{ height: '60px' }} fullWidth>
-                <CustomLoadingButton
-                  type="submit"
-                  startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
-                  variant="contained"
-                  style={{
-                    marginTop: "25px",
-                    backgroundColor: '#ffce73',
-                    fontWeight: 'lighter',
-                    color: 'black',
-                    fontSize: '15px',
-                    height: '28px'
-                  }}
-                  onClick={registrarRegistro}
-                  
-                >
-                  Registrar 
-                </CustomLoadingButton>
-              </FormControl>
-                </Grid>
-
-                
+                  <Grid item xs={12} sm={12} md={6}>
+                    <FormControl sx={{ height: '60px' }} fullWidth>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        onClick={registrarRegistro}
+                        disabled={areAllFieldsEmpty() || !formik.isValid}
+                      >
+                        Registrar
+                      </Button>
+                    </FormControl>
+                  </Grid>
                 </Grid>
                 <Grid container>
                   <Grid item>
                     <Link href="/" variant="body2">
-                      {"Volver al login"}
+                      Volver al login
                     </Link>
                   </Grid>
                 </Grid>
               </Box>
-            </Box>
-          </Grid>
+            </form>
+          </Box>
         </Grid>
-        
-      </ThemeProvider>
-    
-  
+      </Grid>
+    </ThemeProvider>
   );
-}
-
-    
+};
 
 export default Registro;
