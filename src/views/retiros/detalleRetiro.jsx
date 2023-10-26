@@ -215,7 +215,7 @@ export default function DetalleRetiro(props) {
 
     if (arrDetalle.length === 0) {
       Swal.fire({
-        icon: 'success',
+        icon: 'error',
         title: 'Registro de Retiro',
         text: 'Debe Adjuntar los libros',
         timer: 2000
@@ -243,25 +243,24 @@ export default function DetalleRetiro(props) {
             ejemplares: itemArray
           }
     
-          console.log(data)
 
-          console.log(data)
+                      try {
+                       const response = await http.post('/api/prestamo/registro', data);
 
-          // try {
-          //   const response = await http.post('/api/prestamo/registro', data);
+                      console.log('Response:', response.data);
 
-          //   console.log('Response:', response.data);
+                      Swal.fire({
+                       icon: 'success',
+                      title: 'Registro de Prestamo',
+                      text: 'Registro exitoso',
+                        timer: 2000
+                      });
 
-          //   Swal.fire({
-          //   icon: 'success',
-          //   title: 'Registro de Prestamo',
-          //   text: 'Registro exitoso',
-          //   timer: 2000
-          // });
-          // } catch (error) {
-          //   // Handle the error
-          //   console.error('Axios error:', error);
-          // }
+                      cerrarModal(false)
+                    } catch (error) {
+                      // Handle the error
+                       console.error('Axios error:', error);
+                       }
         }
       });
     } else {
@@ -289,13 +288,15 @@ export default function DetalleRetiro(props) {
         timer: 2000
       });
 
+      cerrarModal(false)
+
       
       } catch (error) {
         // Handle the error
         console.error('Axios error:', error);
       }
 
-      cerrarModal(false)
+      
 
     }
 
