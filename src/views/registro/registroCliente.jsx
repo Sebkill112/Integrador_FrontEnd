@@ -70,13 +70,13 @@ const Registro = () => {
     }
 
     if (!values.username) {
-      errors.username = 'El campo Usuario es obligatorio'; 
+      errors.username = 'El campo Usuario es obligatorio';
     } else if (values.username.length < 2 || values.username.length > 40) {
       errors.username = 'El usuario debe tener entre 2 y 40 caracteres';
     }
 
     if (!values.password) {
-      errors.password = 'El campo Password es obligatorio'; 
+      errors.password = 'El campo Password es obligatorio';
     } else if (values.password.length < 2 || values.password.length > 40) {
       errors.password = 'El password debe tener entre 2 y 40 caracteres';
     }
@@ -222,8 +222,8 @@ const Registro = () => {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'success.main', width: 90, height: 90}}>
-              <AccountCircleIcon sx={{m: 1, width: 80, height: 80}} />
+            <Avatar sx={{ m: 1, bgcolor: 'success.main', width: 90, height: 90 }}>
+              <AccountCircleIcon sx={{ m: 1, width: 80, height: 80 }} />
             </Avatar>
             <Typography component="h1" variant="h5">
               Registro
@@ -232,7 +232,7 @@ const Registro = () => {
               <Box sx={{ mt: 1 }}>
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item xs={12} sm={12} md={10}>
-                    <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
+                    <FormControl sx={{ height: '60px', marginBottom: 1.2 }} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                         <BadgeIcon color="primary" fontSize="large" />
                         <TextField
@@ -256,7 +256,7 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
+                    <FormControl sx={{ height: '60px', marginBottom: 1.2 }} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                         <DriveFileRenameOutlineIcon color="primary" fontSize="large" />
                         <TextField
@@ -278,7 +278,7 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
+                    <FormControl sx={{ height: '60px', marginBottom: 1.2 }} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                         <DriveFileRenameOutlineIcon color="primary" fontSize="large" />
                         <TextField
@@ -301,7 +301,7 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
+                    <FormControl sx={{ height: '60px', marginBottom: 1.2 }} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                         <HomeIcon color="primary" fontSize="large" />
                         <TextField
@@ -323,7 +323,7 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
+                    <FormControl sx={{ height: '60px', marginBottom: 1.2 }} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                         <EmailIcon color="primary" fontSize="large" />
                         <TextField
@@ -347,7 +347,7 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
+                    <FormControl sx={{ height: '60px', marginBottom: 1.2 }} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                         <AccountCircleIcon color="primary" fontSize="large" />
                         <TextField
@@ -370,7 +370,7 @@ const Registro = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={12} md={10}>
-                  <FormControl sx={{ height: '60px' , marginBottom: 1.2}} fullWidth>
+                    <FormControl sx={{ height: '60px', marginBottom: 1.2 }} fullWidth>
                       <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                         <PasswordIcon color="primary" fontSize="large" />
                         <TextField
@@ -394,17 +394,18 @@ const Registro = () => {
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={6}>
-                  <FormControl sx={{ height: '60px' , marginTop: 3}} fullWidth>
+                    <FormControl sx={{ height: '60px', marginTop: 3 }} fullWidth>
                       <Button
                         type="submit"
                         variant="contained"
                         onClick={registrarRegistro}
                         disabled={areAllFieldsEmpty() || !formik.isValid}
-                        sx={{ backgroundColor: 'success.main', color: 'white', 
-                        '&:hover': {
-                          backgroundColor: '#33cc33', // Cambia 'lightgreen' al color deseado
-                        }
-                      
+                        sx={{
+                          backgroundColor: 'success.main', color: 'white',
+                          '&:hover': {
+                            backgroundColor: '#33cc33', // Cambia 'lightgreen' al color deseado
+                          }
+
                         }}
                       >
                         Registrar
