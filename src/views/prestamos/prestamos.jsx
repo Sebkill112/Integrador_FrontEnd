@@ -294,7 +294,14 @@ export default function Prestamos() {
 
   const registrarPrestamo = async () =>{
 
-
+    if(arrDetalle.length === 0){
+      Swal.fire({
+        icon: 'error',
+        title: 'Registro de Devolucion',
+        text: 'Debe Adjuntar los libros',
+        timer: 2000
+      });
+    }else{
       const user = JSON.parse(localStorage.getItem('user'));
       const codigosArray = arrDetalle.map(item => ({ codigo: item.codigo }));
 
@@ -332,6 +339,10 @@ export default function Prestamos() {
       // Handle the error
       console.error('Axios error:', error);
     }
+    }
+
+
+      
     
 
   };
