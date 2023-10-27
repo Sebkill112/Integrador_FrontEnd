@@ -5,10 +5,15 @@ import NavBar from "../../layouts/appBar";
 import { ThemeProvider, createTheme } from '@mui/material';
 import MaterialTable from "material-table";
 import http from "../../http";
+import FullScreenDialog from "../../components/Modal";
+import DetalleDevolucion from "./detalleDevolucion";
+import MainCard from "../../ui-component/cards/MainCard";
 
 export default function Devoluciones(){
     const defaultMaterialTheme = createTheme();
     const [prestamos, setPrestamos] = React.useState([]);
+    const [detalle, setDetalle] = React.useState(false);
+    const [prestamo, setPrestamo] = React.useState(null);
 
 
     React.useEffect(() => {
@@ -49,10 +54,25 @@ export default function Devoluciones(){
     
       ];
 
-      const devolverPrestamo  =(data) =>{
-
+      const handleOpenDetallePrestamo = (data) => {
+        setPrestamo(data);
+        setDetalle(true);
         console.log(data);
-      }
+    };
+
+
+    const handleCloseDetallePrestamo = () => {
+        setDetalle(false);
+    };
+
+    const handleCloseModalDevolucion = async (boleean) => {
+      setDetalle(boleean);
+      const response = await http.get(`/api/prestamo/listarPorEstado/Retirado`);
+              setPrestamos(response.data);
+        
+  };
+
+  
 
     return (
         <>
@@ -77,7 +97,7 @@ export default function Devoluciones(){
            actions={[
             {icon: 'save',
             tooltip: 'Agregar Libro',
-            onClick:(event,rowData)=> devolverPrestamo(rowData)
+            onClick:(event,rowData)=> handleOpenDetallePrestamo(rowData)
           }
             
            ]}
@@ -119,6 +139,24 @@ export default function Devoluciones(){
         </Box>
         
         </Box>
+
+        <FullScreenDialog open={detalle} handleClose={handleCloseDetallePrestamo} title="Devolver Prestamo">
+                <div
+                    style={{
+                        minWidth: 'calc(80vw)',
+                        display: 'flex',
+                        width: '90%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '2rem 0',
+                        margin: '0 auto'
+                    }}
+                >
+                    <MainCard>
+                       <DetalleDevolucion dataPrestamo={prestamo} cerrarModal={handleCloseModalDevolucion}/>
+                    </MainCard>
+                </div>
+            </FullScreenDialog>
         </>
     )
 }

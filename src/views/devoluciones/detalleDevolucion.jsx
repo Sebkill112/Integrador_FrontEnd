@@ -1,7 +1,6 @@
 import React from "react";
-import Sidenavs from "../../layouts/sidenavs";
 import { Box, Divider, FormControl, Grid, MenuItem, Paper, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material";
-import BookIcon from '@mui/icons-material/Book';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import http from "../../http";
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
@@ -18,7 +17,8 @@ import CustomModal from '../../components/CustomModal/index';
 import Swal from 'sweetalert2';
 import ArticleIcon from '@mui/icons-material/Article';
 import DateRangeIcon from '@mui/icons-material/DateRange';
-import TablaDetalleRetiro from "./detalleTableRetiro";
+import dayjs from "dayjs";
+import TablaDetalleDevolucion from "./tablaDetalleDevolcion";
 
 
 const stylesModal = {
@@ -97,18 +97,19 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function DetalleRetiro(props) {
+export default function DetalleDevolucion(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { dataPrestamo, cerrarModal } = props;
-  const [ejemplares, setEjemplares] = React.useState([]);
-  const [libro, setLibro] = React.useState(0);
   const [obsevacion, setObservacion] = React.useState('');
   const [detalle, setDetalle] = React.useState(false);
   const [arrDetalle, setArrDetalle] = React.useState([]);
+  const [numero, setNumero] = React.useState([]);
+  const [mora, setMora] = React.useState(0);
+  const [monto, setMonto] = React.useState(0.0);
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ejemplares.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataPrestamo.detallePrestamo.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -125,11 +126,6 @@ export default function DetalleRetiro(props) {
     setPage(0);
   };
 
-
-  const onChangeLibro = (event) => {
-    setLibro(event.target.value);
-  };
-
   const handleOpenDetalle = () => {
     setDetalle(true);
 
@@ -137,15 +133,15 @@ export default function DetalleRetiro(props) {
   const handleCloseDetalle = () => {
     setDetalle(false);
   };
-
   React.useEffect(() => {
     (async () => {
-      const response = await http.get(`/api/ejemplar/estado?libro=${libro}&sede=${dataPrestamo.sede?.codigo}`);
-      setEjemplares(response.data);
+      const response = await http.get("/api/devolucion/codigo");
+      setNumero(response.data)
 
     })();
-  }, [libro]);
+  }, []);
 
+  
 
 
   const agregarLibro = (row) => {
@@ -163,7 +159,7 @@ export default function DetalleRetiro(props) {
 
       Swal.fire({
         icon: 'success',
-        title: 'Registro de Riesgo',
+        title: 'Adjuntar Libro',
         text: 'Libro Adjuntado',
         timer: 2000
       });
@@ -174,7 +170,7 @@ export default function DetalleRetiro(props) {
       const maxItem = arrDocumentos.map((doc) => doc.item);
       const maxI = Math.max(...maxItem);
 
-      const existingBook = arrDocumentos.find((libro) => libro.ejemplar.libroEjemplar.codigo === row.libroEjemplar.codigo);
+      const existingBook = arrDocumentos.find((libro) => libro.ejemplar.libro.codigo === row.libro.codigo);
 
       if (existingBook) {
         Swal.fire({
@@ -195,7 +191,7 @@ export default function DetalleRetiro(props) {
 
         Swal.fire({
           icon: 'success',
-          title: 'Registro de Retiro',
+          title: 'Registro de Devolucion',
           text: 'Libro Adjuntado',
           timer: 2000
         });
@@ -207,7 +203,7 @@ export default function DetalleRetiro(props) {
     setArrDetalle(arrDocumentos);
   };
 
-
+ 
 
   const registrarRetiro = async () => {
 
@@ -216,7 +212,7 @@ export default function DetalleRetiro(props) {
     if (arrDetalle.length === 0) {
       Swal.fire({
         icon: 'error',
-        title: 'Registro de Retiro',
+        title: 'Registro de Devolucion',
         text: 'Debe Adjuntar los libros',
         timer: 2000
       });
@@ -224,7 +220,7 @@ export default function DetalleRetiro(props) {
       Swal.fire({
         title: '¡Alerta!',
         // eslint-disable-next-line no-useless-concat
-        html: `No adjunto algunos ejemplares detallados en el prestamo` + ' desea continuar?',
+        html: `No adjunto algunos libros detallados en el retiro` + ' desea continuar?',
         showCancelButton: true,
         backdrop: false,
         confirmButtonColor: '#3085d6',
@@ -233,79 +229,108 @@ export default function DetalleRetiro(props) {
         confirmButtonText: 'Si, continuar!'
       }).then(async (result) => {
         if (result.value) {
-          const itemArray = arrDetalle.map(item => (item.ejemplar));
+          const user = JSON.parse(localStorage.getItem('user'));
+          const moraData = calcularMora() === 0.0 ? 0 : 1
+          const montoData = calcularMora() === 0.0 ? null : calcularMora();
+          const itemArray = arrDetalle.map(item => (item.ejemplar ));
           const data = {
-            estado: "Retirado",
-            codSede: dataPrestamo.sede.codigo,
-            numPrestamo: dataPrestamo.num_prestamo,
-            observacion: obsevacion,
-            ejemplares: itemArray
+            devolucion:{
+              num_prestamo: dataPrestamo.num_prestamo,
+              num_devolucion: numero,
+              fechaDevolucion: dayjs().format('YYYY-MM-DD'),
+              observaciones: obsevacion,
+              mora: moraData,
+              monto: montoData,
+              usuario: {
+                codigo: user.codigo
+              }
+            },
+            codigoSede: dataPrestamo.sede.codigo,
+            detalleDevolucion: itemArray
           }
 
-          console.log(data)
+          console.log('Response:',data);
+    
 
-          try {
-            const response = await http.put(`/api/prestamo/retiro/${dataPrestamo.codigo}`, data);
+                      try {
+                       const response = await http.post(`/api/devolucion/devolver/${dataPrestamo.codigo}`, data);
 
-            console.log('Response:', response.data);
+                      console.log('Response:', response.data);
 
-            Swal.fire({
-              icon: 'success',
-              title: 'Registro de Retiro',
-              text: 'Registro exitoso',
-              timer: 2000
-            });
+                      Swal.fire({
+                       icon: 'success',
+                      title: 'Registro de Devolucion',
+                      text: 'Registro exitoso',
+                        timer: 2000
+                      });
 
-            cerrarModal(false)
-
-
-          } catch (error) {
-            // Handle the error
-            console.error('Axios error:', error);
-          }
-
+                      cerrarModal(false)
+                    } catch (error) {
+                      // Handle the error
+                       console.error('Axios error:', error);
+                       }
         }
       });
     } else {
 
-      const itemArray = arrDetalle.map(item => (item.ejemplar));
-      const data = {
-        estado: "Retirado",
-        codSede: dataPrestamo.sede.codigo,
-        numPrestamo: dataPrestamo.num_prestamo,
-        observacion: obsevacion,
-        ejemplares: itemArray
-      }
+      const user = JSON.parse(localStorage.getItem('user'));
+          const moraData = calcularMora() === 0.0 ? 0 : 1
+          const montoData = calcularMora() === 0.0 ? null : calcularMora();
+          const itemArray = arrDetalle.map(item => (item.ejemplar ));
+          const data = {
+            devolucion:{
+              num_prestamo: dataPrestamo.num_prestamo,
+              num_devolucion: numero,
+              fechaDevolucion: dayjs().format('YYYY-MM-DD'),
+              observaciones: obsevacion,
+              mora: moraData,
+              monto: montoData,
+              usuario: {
+                codigo: user.codigo
+              }
+            },
+            codigoSede: dataPrestamo.sede.codigo,
+            detalleDevolucion: itemArray
+          }
 
       console.log(data)
 
       try {
-        const response = await http.put(`/api/prestamo/retiro/${dataPrestamo.codigo}`, data);
+        const response = await http.post(`/api/devolucion/devolver/${dataPrestamo.codigo}` , data);
 
         console.log('Response:', response.data);
-
+        
         Swal.fire({
-          icon: 'success',
-          title: 'Registro de Retiro',
-          text: 'Registro exitoso',
-          timer: 2000
-        });
+        icon: 'success',
+        title: 'Registro de Devolucion',
+        text: 'Registro exitoso',
+        timer: 2000
+      });
 
-        cerrarModal(false)
+      cerrarModal(false)
 
-
+      
       } catch (error) {
         // Handle the error
         console.error('Axios error:', error);
       }
 
-
+      
 
     }
 
+  
 
+  };
 
+  const calcularMora =()=> { 
 
+    const devolucion = dayjs(dataPrestamo.fechaDevolucion);
+    if(devolucion.isBefore(dayjs())){
+      return 5.00
+    }
+      return 0.00
+    
   };
 
   return (
@@ -317,7 +342,7 @@ export default function DetalleRetiro(props) {
             <Box sx={{ mt: 1, mb: 2.5, mx: 1 }}>
               <Divider>
                 <Typography variant="h4" sx={{ fontWeight: 'semibold', letterSpacing: '1px', mx: 1, color: '#555' }}>
-                  Registra tu Retiro
+                  Registra tu Devolución
                 </Typography>
               </Divider>
             </Box>
@@ -331,8 +356,8 @@ export default function DetalleRetiro(props) {
                   size="small"
                   name="codigo"
                   type="text"
-                  label="Numero de Prestamo"
-                  value={dataPrestamo.num_prestamo}
+                  label="Numero de Retiro"
+                  value={numero}
                 />
               </FlexBox>
 
@@ -379,37 +404,9 @@ export default function DetalleRetiro(props) {
                   size="small"
                   name="fechaDevolucion"
                   type="text"
-                  label="Fecha de Devolucion"
+                  label="Fecha maxima de Devolucion"
                   value={dataPrestamo.fechaDevolucion}
                 />
-              </FlexBox>
-
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            <FormControl sx={{ height: '60px' }} fullWidth>
-              <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                <BookIcon color="primary" fontSize="large" />
-                <TextField
-                  fullWidth
-                  select
-                  size="small"
-                  name="libros"
-                  type="text"
-                  label="Libros del Prestamo"
-                  value={libro}
-                  onChange={onChangeLibro}
-                >
-                  <MenuItem key={0} value={0}>
-                    [Seleccione libro]
-                  </MenuItem>
-                  {dataPrestamo.detallePrestamo?.map((item) => (
-                    <MenuItem key={item.libro?.codigo} value={item.libro?.codigo}>
-                      {item.libro?.nombre}
-                    </MenuItem>
-                  ))}
-
-                </TextField>
               </FlexBox>
 
             </FormControl>
@@ -459,23 +456,23 @@ export default function DetalleRetiro(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(rowsPerPage > 0 ? ejemplares.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : ejemplares).map(
+                  {(rowsPerPage > 0 ? dataPrestamo.detallePrestamo.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : dataPrestamo.detallePrestamo).map(
                     (row, index) => (
                       <TableRow key={index + 1}>
                         <TableCell component="th" scope="row" style={{ textAlign: 'center' }}>
-                          {row.codigo}
+                          {row.ejemplar}
                         </TableCell>
                         <TableCell component="th" scope="row" style={{ textAlign: 'center' }}>
-                          {row.libroEjemplar?.nombre}
+                          {row.libro?.nombre}
                         </TableCell>
                         <TableCell component="th" scope="row" style={{ textAlign: 'center' }}>
-                          {row.libroEjemplar?.autor}
+                          {row.libro?.autor}
                         </TableCell>
                         <TableCell component="th" scope="row" style={{ textAlign: 'center' }}>
-                          {row.libroEjemplar?.genero?.nombre}
+                          {row.libro?.genero?.nombre}
                         </TableCell>
                         <TableCell component="th" scope="row" style={{ textAlign: 'center' }}>
-                          {row.libroEjemplar?.edicion}
+                          {row.libro?.edicion}
                         </TableCell>
                         <TableCell align="center" style={{ justifyContent: 'center', textAlign: '-webkit-center' }}>
                           <CustomLoadingButton
@@ -509,7 +506,7 @@ export default function DetalleRetiro(props) {
                     <TablePagination
                       rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                       colSpan={3}
-                      count={ejemplares.length}
+                      count={dataPrestamo.detallePrestamo.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       labelRowsPerPage="Filas por página:"
@@ -546,6 +543,22 @@ export default function DetalleRetiro(props) {
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
+            <FormControl sx={{ height: '60px' }} fullWidth>
+              <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                <AttachMoneyIcon color="primary" fontSize="large" />
+                <TextField
+                  fullWidth
+                  size="small"
+                  name="monto"
+                  type="text"
+                  label="Monto a Pagar"
+                  value={calcularMora()}
+                />
+              </FlexBox>
+
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
             <FormControl sx={{ height: '60px' }}>
               <CustomLoadingButton
                 type="submit"
@@ -561,7 +574,7 @@ export default function DetalleRetiro(props) {
                 }}
                 onClick={registrarRetiro}
               >
-                Registrar Retiro
+                Registrar Devolucion
               </CustomLoadingButton>
             </FormControl>
           </Grid>
@@ -584,7 +597,7 @@ export default function DetalleRetiro(props) {
           <Grid container spacing={2} justifyContent="center" alignItems="center">
 
             <Grid item xs={12} sm={12} md={12}>
-              <TablaDetalleRetiro propiedades={arrDetalle} datahijo={dataDetalle} />
+              <TablaDetalleDevolucion propiedades={arrDetalle} datahijo={dataDetalle} />
             </Grid>
 
           </Grid>
