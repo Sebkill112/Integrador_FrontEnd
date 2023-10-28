@@ -18,101 +18,39 @@ import CustomModal from "../../components/CustomModal";
 import MaterialTable from "material-table";
 import { ThemeProvider } from '@mui/material';
 import Swal from "sweetalert2";
-
-
+import ActualizacionSede from "./actualizaSedeForm";
 
 const stylesModal = {
-    toolbar: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center'
-    },
-    box: {
-      display: 'flex',
-      alignItems: 'center',
-      pt: '10em'
-    }
-  };
-  
-  function TablePaginationActions(props) {
-    const theme = useTheme();
-    const { count, page, rowsPerPage, onPageChange } = props;
-  
-    const handleFirstPageButtonClick = (event) => {
-      onPageChange(event, 0);
-    };
-  
-    const handleBackButtonClick = (event) => {
-      onPageChange(event, page - 1);
-    };
-  
-    const handleNextButtonClick = (event) => {
-      onPageChange(event, page + 1);
-    };
-  
-    const handleLastPageButtonClick = (event) => {
-      onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-    };
-  
-    return (
-      <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-        <IconButton
-          onClick={handleFirstPageButtonClick}
-          disabled={page === 0}
-          aria-label="first page"
-        >
-          {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-        </IconButton>
-        <IconButton
-          onClick={handleBackButtonClick}
-          disabled={page === 0}
-          aria-label="previous page"
-        >
-          {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-        </IconButton>
-        <IconButton
-          onClick={handleNextButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-          aria-label="next page"
-        >
-          {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-        </IconButton>
-        <IconButton
-          onClick={handleLastPageButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-          aria-label="last page"
-        >
-          {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-        </IconButton>
-      </Box>
-    );
+  toolbar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  box: {
+    display: 'flex',
+    alignItems: 'center',
+    pt: '10em'
   }
-  
-  TablePaginationActions.propTypes = {
-    count: PropTypes.number.isRequired,
-    onPageChange: PropTypes.func.isRequired,
-    page: PropTypes.number.isRequired,
-    rowsPerPage: PropTypes.number.isRequired,
-  };
+};  
 
-
+ 
 export default function MantemientoSedes(){
 
     const defaultMaterialTheme = createTheme();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [sedes, setSedes] = React.useState([]);
+    const [sede, setSede] = React.useState(null);
     const [codigo, setCodigo] = React.useState([]);
     const [nombre, setNombre] = React.useState('');
     const [direccion, setDireccion] = React.useState('');
     const [telefono, setTelefono] = React.useState('');
-    const [contactosede, setContactoSede] = React.useState('');
+    const [contactoSede, setContactoSede] = React.useState('');
     const [estado, setEstado] = React.useState('');
-    const [operacion, SetOperacion]= useState(1);
-    const [arrDetalle, setArrDetalle] = React.useState([]);
-    const [detalle, setDetalle] = React.useState(false);
+    const [actualiza,setActualiza] = React.useState(false);
   
 
+    
     const agregarLibro=(data)=>{
       console.log(data);
     }
@@ -136,25 +74,27 @@ export default function MantemientoSedes(){
         setEstado(event.target.value);
     }
 
+    const handleOpenActualiza = (data) =>{
+      setSede(data)
+      setActualiza(true);
+    }
+
+    const handleCloseActualiza = () =>{
+      setActualiza(false);
+    }
+
     React.useEffect(() => {
         (async () => {
           const response = await http.get("/api/sede/listado");
           setSedes(response.data)  
         })();
       }, []);
-     /* React.useEffect(() => {
-        (async () => {
-          const response = await http.get("/api/sede/registrar");
-          setSedes(response.data)
-    
-        })();
-      }, []);
-      React.useEffect(() => {
-        (async () => {
-          const response = await http.put("/api/sede/actualizar");
-          setSedes(response.data) 
-        })();
-      }, []);*/
+
+      const handleCloseModalActualiza = async (boleean) => {
+        setActualiza(boleean);
+        const response = await http.get("/api/sede/listado");
+                setSedes(response.data); 
+    };
 
       const limpiarInput = () => {
         setNombre('');
@@ -175,8 +115,8 @@ export default function MantemientoSedes(){
         nombre: nombre,
         direccion: direccion,
     telefono: telefono,
-    contactoSede:contactosede,
-    estado: 1
+    contactoSede:contactoSede,
+    //estado: 1
         }
 
         console.log(data)
@@ -204,49 +144,72 @@ export default function MantemientoSedes(){
         listadoRefrescar()
       };
 
-const handleOpenDetalle = () => {
-    setDetalle(true);
+  const eliminaSede = (data) =>{
+    Swal.fire({
+      title: `¿Desea eliminar la sede ${data.nombre}? `,
+      text: "Los cambios no se van a revertir",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'No, cancelar'
+    }).then(async (result) => {
+          if (result.isConfirmed) {
+            await http.delete(`/api/sede/elimina/${data.codigo}`)
+            .then((response) => {
 
-  };
-  const handleCloseDetalle = () => {
-    setDetalle(false);
-  };
-  const dataDetalle = (arrDocumentos) => {
-    setArrDetalle(arrDocumentos);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Eliminar Sede',
+                    text: `${response.data.mensaje}`,
+                    timer: 2000
+                });
+                listadoRefrescar();
+            })
+            .catch((error) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Eliminacion de Sede',
+                        text: `No se pudo eliminar el sede, valide con el administrador`,
+                    });
+            });
+          }
+    })   
   };
     
   const columnas = [
-        {
-          title: 'Codigo',
-          field: 'codigo'
-        },
-        {
-          title: 'Nombre',
-          field: 'nombre'
-        },
-        {
-          title: 'Direccion',
-          field: 'direccion'
-        },
-        {
-          title: 'Contacto Sede',
-          field: 'contactoSede'
-        },
-        {
-          title: 'Estado',
-          field: 'estado'
-        }
-      ];
+    {
+      title: 'Codigo',
+      field: 'codigo'
+    },
+    {
+      title: 'Nombre',
+      field: 'nombre'
+    },
+    {
+      title: 'Direccion',
+      field: 'direccion'
+    },
+    {
+      title: 'Telefono',
+      field: 'telefono'
+    },
+    {
+      title: 'Contacto Sede',
+      field: 'contactoSede'
+    }
+  ];
 
     return (
         <>
         <NavBar/>
-        <Box height={30}/>
+        <Box height={50}/>
         <Box display={'flex'}>
-        <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <Sidenavs />
+        <Box component="main" sx={{flexGrow: 1, p: 3}}>
         
-        <div style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
+        
         <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item xs={12} sm={12} md={12}>
               <Box sx={{ mt: 1, mb: 2.5, mx: 1 }}>
@@ -257,30 +220,14 @@ const handleOpenDetalle = () => {
                 </Divider>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <FormControl sx={{ height: '60px' }}>
-                 <CustomLoadingButton
-                  type="submit"
-                  startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
-                  variant="contained"
-                  style={{
-                    marginTop: 2,
-                    backgroundColor: '#ffce73',
-                    fontWeight: 'lighter',
-                    color: 'black',
-                    fontSize: '15px',
-                    height: '28px'
-                  }} onClick={RegistrarSede} >Agregar</CustomLoadingButton>
-              </FormControl >
-            </Grid>
-            <Grid item xs={12} sm={12} md={3}>
+            <Grid item xs={12} sm={12} md={2.5}>
               <FormControl sx={{ height: '60px' }} fullWidth>
                 <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                   <ApartmentIcon color="primary" fontSize="large" />
                   <TextField
                     fullWidth
                     size="small"
-                    name="codigo"
+                    name="Nombre"
                     type="text"
                     label="Ingresa Nombre"
                     value={nombre}
@@ -289,14 +236,14 @@ const handleOpenDetalle = () => {
                 </FlexBox>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={12} md={3}>
+            <Grid item xs={12} sm={12} md={2.5}>
               <FormControl sx={{ height: '60px' }} fullWidth>
                 <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                   <ApartmentIcon color="primary" fontSize="large" />
                   <TextField
                     fullWidth
                     size="small"
-                    name="codigo"
+                    name="Direccion"
                     type="text"
                     label="Ingresa Direccion"
                     value={direccion}
@@ -305,14 +252,14 @@ const handleOpenDetalle = () => {
                 </FlexBox>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={12} md={3}>
+            <Grid item xs={12} sm={12} md={2.5}>
               <FormControl sx={{ height: '60px' }} fullWidth>
                 <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                   <ApartmentIcon color="primary" fontSize="large" />
                   <TextField
                     fullWidth
                     size="small"
-                    name="codigo"
+                    name="Telefono"
                     type="text"
                     label="Ingresa Telefono"
                     value={telefono}
@@ -321,21 +268,37 @@ const handleOpenDetalle = () => {
                 </FlexBox>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={12} md={3}>
+            <Grid item xs={12} sm={12} md={2.5}>
               <FormControl sx={{ height: '60px' }} fullWidth>
                 <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                   <ApartmentIcon color="primary" fontSize="large" />
                   <TextField
                     fullWidth
                     size="small"
-                    name="codigo"
+                    name="Contacto Sede"
                     type="text"
-                    label="Ingresa Direccion"
-                    value={contactosede}
+                    label="Contacto Sede"
+                    value={contactoSede}
                     onChange={onchangeContactoSede}
                   />
                 </FlexBox>
               </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={12} md={2}>
+              <FormControl sx={{ height: '60px' }}>
+                 <CustomLoadingButton
+                  type="submit"
+                  startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
+                  variant="contained"
+                  style={{
+                    marginTop: 2,
+                    backgroundColor: '#adff33',
+                    fontWeight: 'lighter',
+                    color: 'black',
+                    fontSize: '15px',
+                    height: '28px'
+                  }} onClick={RegistrarSede} >Agregar</CustomLoadingButton>
+              </FormControl >
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
             <div style={{ width: '100%', height: '100%' }}>
@@ -349,10 +312,14 @@ const handleOpenDetalle = () => {
            data={sedes}
            title="Libros de la Sede"
            actions={[
-            {icon: 'add',
-            tooltip: 'Agregar Libro',
-            onClick:(event,rowData)=> agregarLibro(rowData)
-          }
+            {icon: 'edit',
+            tooltip: 'Actualiza Sede',
+            onClick:(event,rowData)=> handleOpenActualiza(rowData)
+          },
+          {icon: 'delete',
+            tooltip: 'Eliminar Sede',
+            onClick:(event,rowData)=> eliminaSede(rowData)
+          },
             
            ]}
            options={
@@ -378,7 +345,7 @@ const handleOpenDetalle = () => {
               previousTooltip: 'Pagina anterior',
             },
             toolbar: {
-              searchPlaceholder: 'Buscar Libro'
+              searchPlaceholder: 'Buscar Sede'
             },
             body:{ emptyDataSourceMessage:
             <h1 style={{ textAlign:'center'}}>No hay libros en la sede</h1> }
@@ -391,13 +358,10 @@ const handleOpenDetalle = () => {
             </Grid>
             </Grid>
            
-        </div>
         </Box>
         </Box>
 
-
-
-        <CustomModal open={detalle} handleClose={handleCloseDetalle} title="Detalle Sede" styles={stylesModal}>
+        <CustomModal open={actualiza} handleClose={handleCloseActualiza} title="Actualizacion de Sede" styles={stylesModal}>
         <div
           style={{
             // minWidth: 'calc(80vw)',
@@ -413,6 +377,9 @@ const handleOpenDetalle = () => {
           <Grid container spacing={2} justifyContent="center" alignItems="center">
 
             <Grid item xs={12} sm={12} md={12}>
+
+
+              <ActualizacionSede cerrarModal={handleCloseModalActualiza} dataSede={sede}/>
             </Grid>
 
           </Grid>
