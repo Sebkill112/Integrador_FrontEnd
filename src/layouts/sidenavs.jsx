@@ -97,27 +97,7 @@ export default function Sidenavs() {
         </DrawerHeader>
         <Divider />
         <Divider />
-        <List>
-        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=> navigate("/homepage")}>
-              <ListItemButton
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary="Homepage" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem> 
+        <List>        
         <ListItem disablePadding sx={{ display: 'block' }} onClick={()=> navigate("/libros")}>
               <ListItemButton
                 sx={{
