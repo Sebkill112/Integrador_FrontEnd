@@ -26,7 +26,7 @@ import AddHomeWorkIcon from '@mui/icons-material/AddHomeWork';
 import BookIcon from '@mui/icons-material/Book';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
-
+import HomeIcon from '@mui/icons-material/Home';
 const drawerWidth = 240;
 
 
@@ -83,12 +83,12 @@ export default function Sidenavs() {
   // const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
   const open = useAppStore((state) => state.dopen)
-  
+
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Box height={30}/>
+      <Box height={30} />
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton>
@@ -98,12 +98,32 @@ export default function Sidenavs() {
         <Divider />
         <Divider />
         <List>
+        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=> navigate("/homepage")}>
+              <ListItemButton
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary="Homepage" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem> 
         <ListItem disablePadding sx={{ display: 'block' }} onClick={()=> navigate("/libros")}>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
               >
                 <ListItemIcon
@@ -121,9 +141,9 @@ export default function Sidenavs() {
             <ListItem disablePadding sx={{ display: 'block' }}  onClick={()=> navigate("/sedes")}>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
               >
                 <ListItemIcon
@@ -141,9 +161,9 @@ export default function Sidenavs() {
             <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/prestamo")} >
               <ListItemButton
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
               >
                 <ListItemIcon

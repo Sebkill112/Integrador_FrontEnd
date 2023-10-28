@@ -45,7 +45,14 @@ const LoginPage = () => {
 
         const cookieExpiration = `expires=${expirationDate.toUTCString()}`;
 
+<<<<<<< HEAD
         document.cookie = `jwtToken=${data.token}; path=/; ${cookieExpiration}; secure`;
+=======
+      document.cookie = `jwtToken=${data.token}; path=/; ${cookieExpiration}; secure`;
+
+      navigate('/libros');
+      navigate('/homepage');
+>>>>>>> morita
 
         navigate('/libros');
         // Mensaje de éxito
