@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, CssBaseline, FormControl, Grid, Link, Paper, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { Avatar, Box, Button, CssBaseline, Grid, Link, Paper, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React, { useState } from 'react';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +6,8 @@ import Swal from 'sweetalert2';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PasswordIcon from '@mui/icons-material/Password';
 import { FlexBox } from '../../components/Containers';
-
+import CustomLoadingButton from '../../components/Button/LoadingButton';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -34,27 +35,22 @@ const LoginPage = () => {
       });
 
       if (response.ok) {
-        // Si la autenticación es exitosa, el servidor debería haber configurado una cookie con el token JWT
-        const data = await response.json(); // Lee el contenido JSON de la respuesta
-        console.log(data);
-
+        
+        const data = await response.json(); 
         localStorage.setItem('user', JSON.stringify(data));
         console.log('local', JSON.parse(localStorage.getItem('user')));
         const expirationDate = new Date();
-        expirationDate.setMinutes(expirationDate.getTime() + 30 * 60 * 1000);
+        if (!isNaN(expirationDate)) { 
+          expirationDate.setMinutes(expirationDate.getMinutes() + 30);
+        } else {
+          console.log('La fecha es inválida.');
+        }      
 
         const cookieExpiration = `expires=${expirationDate.toUTCString()}`;
 
-<<<<<<< HEAD
-        document.cookie = `jwtToken=${data.token}; path=/; ${cookieExpiration}; secure`;
-=======
-      document.cookie = `jwtToken=${data.token}; path=/; ${cookieExpiration}; secure`;
+        document.cookie = `jwtToken=${data.token}; path=/; ${cookieExpiration};`;
 
-      navigate('/libros');
-      navigate('/homepage');
->>>>>>> morita
-
-        navigate('/libros');
+        navigate('/index');
         // Mensaje de éxito
         Swal.fire({
           icon: 'success',
@@ -73,6 +69,10 @@ const LoginPage = () => {
       console.error('Error:', error);
     }
   };
+
+  const handleToHome = () => {
+    navigate('/');
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -93,6 +93,23 @@ const LoginPage = () => {
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+         { /*<CustomLoadingButton
+            type="submit"
+            startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
+            variant="contained"
+            style={{
+              margin: 'auto',
+              marginTop: '20px',
+              backgroundColor: '#fff',
+              fontWeight: 'lighter',
+              color: '#000',
+              fontSize: '15px',
+              height: '28px'
+            }}
+            onClick={handleToHome}
+          >
+            Ir a Home
+          </CustomLoadingButton>*/} 
           <Box
             sx={{
               my: 8,
@@ -112,55 +129,55 @@ const LoginPage = () => {
             <form >
               <Box sx={{ mt: 1 }}>
                 <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={12} sm={12} md={10}>
-              <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                  <Grid item xs={12} sm={12} md={10}>
+                    <FlexBox justifyContent="end" alignItems="center" spacing="8px">
 
-                <AccountCircleIcon color="primary" fontSize="large" />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  value={username}
-                  label="Usuario"
-                  name="username"
-                  onChange={onchangeUser}
-                />
-              </FlexBox>
-            </Grid>
-            <Grid item xs={12} sm={12} md={10}>
+                      <AccountCircleIcon color="primary" fontSize="large" />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        value={username}
+                        label="Usuario"
+                        name="username"
+                        onChange={onchangeUser}
+                      />
+                    </FlexBox>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={10}>
 
-            <FlexBox justifyContent="end" alignItems="center" spacing="8px">
+                    <FlexBox justifyContent="end" alignItems="center" spacing="8px">
 
-              <PasswordIcon color="primary" fontSize="large" />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                value={password}
-                onChange={onchangePass}
-              />
-            </FlexBox>
-            </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-            <Button
-              type="button"
-              fullWidth
-              variant="contained"
-              onClick={handleLogin}
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Ingresar
-            </Button>
-            </Grid>
-            </Grid>
-            <Grid container>
-              <Grid item>
-                <Link href="/registro" variant="body2">
-                  {"No tienes una cuenta? Registrate aquí"}
-                  </Link>
+                      <PasswordIcon color="primary" fontSize="large" />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        value={password}
+                        onChange={onchangePass}
+                      />
+                    </FlexBox>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={6}>
+                    <Button
+                      type="button"
+                      fullWidth
+                      variant="contained"
+                      onClick={handleLogin}
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      Ingresar
+                    </Button>
+                  </Grid>
+                </Grid>
+                <Grid container>
+                  <Grid item>
+                    <Link href="/registro" variant="body2">
+                      {"No tienes una cuenta? Registrate aquí"}
+                    </Link>
                   </Grid>
                 </Grid>
               </Box>

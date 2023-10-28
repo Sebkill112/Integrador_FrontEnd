@@ -83,6 +83,7 @@ export default function Sidenavs() {
   // const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
   const open = useAppStore((state) => state.dopen)
+  const user = JSON.parse(localStorage.getItem('user')); 
 
 
   return (
@@ -97,27 +98,8 @@ export default function Sidenavs() {
         </DrawerHeader>
         <Divider />
         <Divider />
-        <List>
-        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=> navigate("/homepage")}>
-              <ListItemButton
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary="Homepage" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem> 
+        <List>        
+          {user.rol.codigo === 1 &&
         <ListItem disablePadding sx={{ display: 'block' }} onClick={()=> navigate("/libros")}>
               <ListItemButton
                 sx={{
@@ -138,6 +120,8 @@ export default function Sidenavs() {
                 <ListItemText primary="Libros" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
+            }
+             {user.rol.codigo === 1 &&
             <ListItem disablePadding sx={{ display: 'block' }}  onClick={()=> navigate("/sedes")}>
               <ListItemButton
                 sx={{
@@ -158,6 +142,8 @@ export default function Sidenavs() {
                 <ListItemText primary="Sedes" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
+            }
+            {(user.rol.codigo === 1 || user.rol.codigo === 2) &&
             <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/prestamo")} >
               <ListItemButton
                 sx={{
@@ -178,6 +164,8 @@ export default function Sidenavs() {
                 <ListItemText primary="Prestamos" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
+            }
+            {(user.rol.codigo === 1 || user.rol.codigo === 3) &&
             <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/retiro")} >
               <ListItemButton
                 sx={{
@@ -198,6 +186,8 @@ export default function Sidenavs() {
                 <ListItemText primary="Retiros" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
+            }
+             {(user.rol.codigo === 1 || user.rol.codigo === 3) &&
             <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/devolucion")} >
               <ListItemButton
                 sx={{
@@ -218,6 +208,7 @@ export default function Sidenavs() {
                 <ListItemText primary="Devoluciones" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
+            }
         </List>
       </Drawer>
     </Box>

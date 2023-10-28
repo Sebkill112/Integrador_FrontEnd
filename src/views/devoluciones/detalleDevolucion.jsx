@@ -411,27 +411,7 @@ export default function DetalleDevolucion(props) {
 
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
-            <FormControl sx={{ height: '60px' }}>
-              <CustomLoadingButton
-                type="submit"
-                startIcon={<LoupeIcon sx={{ height: '15px' }} />}
-                variant="contained"
-                style={{
-                  marginTop: 2,
-                  backgroundColor: '#ffce73',
-                  fontWeight: 'lighter',
-                  color: 'black',
-                  fontSize: '15px',
-                  height: '28px'
-                }}
-                onClick={handleOpenDetalle}
-
-              >
-                Ver Detalle
-              </CustomLoadingButton>
-            </FormControl>
-          </Grid>
+         
           <Grid item xs={12} sm={12} md={12}>
             <Paper >
               <Table>
@@ -522,7 +502,7 @@ export default function DetalleDevolucion(props) {
 
           </Grid>
 
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={12} md={3}>
             <FormControl sx={{ height: '60px' }} fullWidth>
               <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                 <ArticleIcon color="primary" fontSize="large" />
@@ -542,7 +522,7 @@ export default function DetalleDevolucion(props) {
 
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={12} md={3}>
             <FormControl sx={{ height: '60px' }} fullWidth>
               <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                 <AttachMoneyIcon color="primary" fontSize="large" />
@@ -558,7 +538,7 @@ export default function DetalleDevolucion(props) {
 
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={12} md={3}>
             <FormControl sx={{ height: '60px' }}>
               <CustomLoadingButton
                 type="submit"
@@ -575,6 +555,27 @@ export default function DetalleDevolucion(props) {
                 onClick={registrarRetiro}
               >
                 Registrar Devolucion
+              </CustomLoadingButton>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={12} md={3}>
+            <FormControl sx={{ height: '60px' }}>
+              <CustomLoadingButton
+                type="submit"
+                startIcon={<LoupeIcon sx={{ height: '15px' }} />}
+                variant="contained"
+                style={{
+                  marginTop: 2,
+                  backgroundColor: '#ffce73',
+                  fontWeight: 'lighter',
+                  color: 'black',
+                  fontSize: '15px',
+                  height: '28px'
+                }}
+                onClick={handleOpenDetalle}
+
+              >
+                Ver Detalle
               </CustomLoadingButton>
             </FormControl>
           </Grid>

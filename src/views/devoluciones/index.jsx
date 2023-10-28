@@ -1,6 +1,6 @@
 import React from "react";
 import Sidenavs from "../../layouts/sidenavs";
-import { Box, Grid } from "@mui/material";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import NavBar from "../../layouts/appBar";
 import { ThemeProvider, createTheme } from '@mui/material';
 import MaterialTable from "material-table";
@@ -82,6 +82,15 @@ export default function Devoluciones(){
         <Sidenavs />
         <Box component="main" sx={{flexGrow: 1, p: 3}}>
        <Grid container spacing={2} justifyContent="center" alignItems="center">
+       <Grid item xs={12} sm={12} md={12}>
+              <Box sx={{ mt: 1, mb: 2.5, mx: 1 }}>
+                <Divider>
+                  <Typography variant="h4" sx={{ fontWeight: 'semibold', letterSpacing: '1px', mx: 1, color: '#555' }}>
+                    DEVOLUCIÓN
+                  </Typography>
+                </Divider>
+              </Box>
+            </Grid>
 
        <Grid item xs={12} sm={12} md={12}>
             <div style={{ width: '100%', height: '100%' }}>

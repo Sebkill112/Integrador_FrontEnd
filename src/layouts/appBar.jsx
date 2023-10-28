@@ -16,6 +16,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { useAppStore } from './appStore';
+import { useNavigate } from 'react-router-dom';
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -69,6 +70,8 @@ export default function NavBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
+  const navigate = useNavigate();
+
   const updateOpen = useAppStore((state) => state.updateOpen)
   const dopen = useAppStore((state) => state.dopen)
   const isMenuOpen = Boolean(anchorEl);
@@ -91,6 +94,17 @@ export default function NavBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const eliminarSesionUsuario = () => {
+    if (localStorage.getItem("user")) {
+        localStorage.removeItem("user");
+        navigate('/login')
+        console.log("Sesión de usuario eliminada.");
+    } else {
+        console.log("No se encontró ninguna sesión de usuario en el localStorage.");
+    }
+}
+
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -110,7 +124,7 @@ export default function NavBar() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Cerrar sesión</MenuItem>
+      <MenuItem onClick={eliminarSesionUsuario}>Cerrar sesión</MenuItem>
     </Menu>
   );
 
@@ -166,17 +180,9 @@ export default function NavBar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            MUI
+            Biblioteca
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+   
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton

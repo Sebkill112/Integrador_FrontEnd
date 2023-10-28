@@ -10,11 +10,8 @@ import LogoHome from "./components/logo";
 export default function HomePage() {    
 
     return (
-        <>
-            <NavBar />
-            <Box height={30} />
-            <Box display={'flex'}>
-                <Sidenavs />
+        <>            
+            <Box display={'flex'}>                
                 <Box component="main" sx={{ flexGrow: 1, p: 3 }}>                    
                     <LogoHome />
                     <CarouselHome />                     
