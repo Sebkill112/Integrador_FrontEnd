@@ -26,7 +26,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:8090/auth/login', {
+      const response = await fetch('https://biblioteca2023.onrender.com/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

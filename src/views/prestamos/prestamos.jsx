@@ -19,7 +19,9 @@ import CustomModal from '../../components/CustomModal/index';
 import Swal from 'sweetalert2';
 import TablaDetallePrestamo from './detalleTable';
 import MaterialTable from "material-table";
+import LoupeIcon from '@mui/icons-material/Loupe';
 import dayjs from "dayjs";
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 
 
 const stylesModal = {
@@ -477,7 +479,7 @@ export default function Prestamos() {
               <FormControl sx={{ height: '60px' }}>
                 <CustomLoadingButton
                   type="submit"
-                  startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
+                  startIcon={<ChangeCircleIcon sx={{ height: '15px' }} />}
                   variant="contained"
                   style={{
                     marginTop: 2,
@@ -549,11 +551,11 @@ export default function Prestamos() {
               <FormControl sx={{ height: '60px' }}>
                 <CustomLoadingButton
                   type="submit"
-                  startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
+                  startIcon={<LoupeIcon sx={{ height: '15px' }} />}
                   variant="contained"
                   style={{
                     marginTop: 2,
-                    backgroundColor: '#ffce73',
+                    backgroundColor: '#00cccc',
                     fontWeight: 'lighter',
                     color: 'black',
                     fontSize: '15px',
@@ -574,7 +576,7 @@ export default function Prestamos() {
                   variant="contained"
                   style={{
                     marginTop: 2,
-                    backgroundColor: '#ffce73',
+                    backgroundColor: '#adff33',
                     fontWeight: 'lighter',
                     color: 'black',
                     fontSize: '15px',

@@ -422,7 +422,7 @@ export default function DetalleRetiro(props) {
                 variant="contained"
                 style={{
                   marginTop: 2,
-                  backgroundColor: '#ffce73',
+                  backgroundColor: '#00cccc',
                   fontWeight: 'lighter',
                   color: 'black',
                   fontSize: '15px',
@@ -553,7 +553,7 @@ export default function DetalleRetiro(props) {
                 variant="contained"
                 style={{
                   marginTop: 2,
-                  backgroundColor: '#ffce73',
+                  backgroundColor: '#adff33',
                   fontWeight: 'lighter',
                   color: 'black',
                   fontSize: '15px',

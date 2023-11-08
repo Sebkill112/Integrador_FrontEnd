@@ -16,7 +16,7 @@ const getJwtFromCookie = () => {
 
 // Crea una instancia de Axios con la configuración base.
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8090', // Reemplaza con la URL de tu API
+  baseURL: 'https://biblioteca2023.onrender.com/', // Reemplaza con la URL de tu API
 });
 
 // Intercepta las solicitudes antes de enviarlas.

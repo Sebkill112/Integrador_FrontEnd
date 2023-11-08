@@ -170,7 +170,7 @@ const Registro = () => {
 
     console.log(data);
 
-    await axios.post('http://localhost:8090/auth/register', data)
+    await axios.post('https://biblioteca2023.onrender.com/auth/register', data)
       .then((response) => {
         if (response.status === 200) {
           Swal.fire({
