@@ -8,10 +8,12 @@ import PasswordIcon from '@mui/icons-material/Password';
 import { FlexBox } from '../../components/Containers';
 import CustomLoadingButton from '../../components/Button/LoadingButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { LoadingButton } from '@mui/lab';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const defaultTheme = createTheme();
 
@@ -162,15 +164,20 @@ const LoginPage = () => {
                     </FlexBox>
                   </Grid>
                   <Grid item xs={12} sm={12} md={6}>
-                    <Button
+                    <LoadingButton
                       type="button"
                       fullWidth
+                      loading={isLoading}
                       variant="contained"
-                      onClick={handleLogin}
+                      onClick={() => {
+                        setIsLoading(true); 
+                        handleLogin() 
+                          .finally(() => setIsLoading(false));
+                      }}
                       sx={{ mt: 3, mb: 2 }}
                     >
                       Ingresar
-                    </Button>
+                    </LoadingButton>
                   </Grid>
                 </Grid>
                 <Grid container>

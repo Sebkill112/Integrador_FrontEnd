@@ -113,6 +113,7 @@ export default function Prestamos() {
   const actual = new Date();
   const [retiro] = React.useState(actual.setDate(actual.getDate()+3));
   const [devolucion] = React.useState(actual.setDate(actual.getDate()+10));
+  const tableRef = React.createRef();
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - libros.length) : 0;
 
@@ -349,6 +350,28 @@ export default function Prestamos() {
 
   };
 
+
+  const cambiarSede =() => { 
+    Swal.fire({
+      title: '¡Alerta!',
+      // eslint-disable-next-line no-useless-concat
+      html: `Esta Seguro de Cambiar de Sede para el Prestamo?`,
+      showCancelButton: true,
+      backdrop: false,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Si, continuar!'
+    }).then( (result) => {
+      setArrDetalle([]);
+      setSede(0);
+      setLibros([])
+    });
+   
+
+
+  };
+
   return (
     <>
       <NavBar />
@@ -475,7 +498,8 @@ export default function Prestamos() {
                 </FormControl>
               </Grid>
             )}
-            <Grid item xs={12} sm={12} md={6}>
+            {arrDetalle.length === 0 && (
+              <Grid item xs={12} sm={12} md={6}>
               <FormControl sx={{ height: '60px' }}>
                 <CustomLoadingButton
                   type="submit"
@@ -489,12 +513,39 @@ export default function Prestamos() {
                     fontSize: '15px',
                     height: '28px'
                   }}
+                  onClick={cambiarSede}
+                  disabled
 
                 >
                   Cambiar Sede
                 </CustomLoadingButton>
               </FormControl>
             </Grid>
+            )}
+             {arrDetalle.length !== 0 && (
+              <Grid item xs={12} sm={12} md={6}>
+              <FormControl sx={{ height: '60px' }}>
+                <CustomLoadingButton
+                  type="submit"
+                  startIcon={<ChangeCircleIcon sx={{ height: '15px' }} />}
+                  variant="contained"
+                  style={{
+                    marginTop: 2,
+                    backgroundColor: '#ffce73',
+                    fontWeight: 'lighter',
+                    color: 'black',
+                    fontSize: '15px',
+                    height: '28px'
+                  }}
+                  onClick={cambiarSede}
+
+                >
+                  Cambiar Sede
+                </CustomLoadingButton>
+              </FormControl>
+            </Grid>
+            )}
+            
             <Grid item xs={12} sm={12} md={12}>
             <div style={{ width: '100%', height: '100%' }}>
                 <link
@@ -505,6 +556,7 @@ export default function Prestamos() {
            <MaterialTable
            columns={columnas}
            data={libros}
+           tableRef={tableRef}
            title="Libros de la Sede"
            actions={[
             {icon: 'add',
