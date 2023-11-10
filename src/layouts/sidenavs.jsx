@@ -9,7 +9,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
@@ -209,6 +209,69 @@ export default function Sidenavs() {
               </ListItemButton>
             </ListItem>
             }
+            {(user.rol.codigo === 1 || user.rol.codigo === 3) &&
+            <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/retiro")} >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <BookmarkAddedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Retiros" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+            }
+             {(user.rol.codigo === 1 || user.rol.codigo === 2) &&
+            <><ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate("/reporte")}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <PictureAsPdfIcon />
+                </ListItemIcon>
+                <ListItemText primary="Reporte Prestamo" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem><ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate("/reporteDev")}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <PictureAsPdfIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Reporte Devoluciones" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem></>
+}
         </List>
       </Drawer>
     </Box>

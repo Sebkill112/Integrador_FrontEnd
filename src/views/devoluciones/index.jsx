@@ -83,7 +83,7 @@ export default function Devoluciones(){
         <Box component="main" sx={{flexGrow: 1, p: 3}}>
        <Grid container spacing={2} justifyContent="center" alignItems="center">
        <Grid item xs={12} sm={12} md={12}>
-              <Box sx={{ mt: 1, mb: 2.5, mx: 1 }}>
+              <Box sx={{ mt: 2.5, mb: 2.5, mx: 1 }}>
                 <Divider>
                   <Typography variant="h4" sx={{ fontWeight: 'semibold', letterSpacing: '1px', mx: 1, color: '#555' }}>
                     DEVOLUCIÓN
