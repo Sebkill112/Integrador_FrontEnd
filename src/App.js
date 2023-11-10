@@ -11,6 +11,8 @@ import Retiro from './views/retiros/index';
 import Devolucion from './views/devoluciones/index';
 import HomePage from './views/home/homepage';
 import Index from './views/login/bienvenida';
+import Reporte from './views/reportePrestamo/reporte';
+import ReporteDevolucion from './views/reportePrestamo/reporteDevolucion';
 
 
 const Private = ({Component}) => {
@@ -31,7 +33,9 @@ function App() {
         <Route path="/sedes" exact element={<Private Component={MantemientoSedes} />} />
         <Route path="/prestamo" exact element={<Private Component={Prestamos} />} />
         <Route path="/retiro" exact element={<Private Component={Retiro} />} />
-        <Route path="/devolucion" exact element={<Private Component={Devolucion} />} />          
+        <Route path="/devolucion" exact element={<Private Component={Devolucion} />} />  
+       < Route path="/reporte" exact element={<Private Component={Reporte} />} />         
+       < Route path="/reporteDev" exact element={<Private Component={ReporteDevolucion} />} />          
         </Routes>
       </BrowserRouter>
     </div>
