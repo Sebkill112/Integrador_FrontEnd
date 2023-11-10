@@ -12,7 +12,7 @@ export default function HomePage() {
     return (
         <>            
             <Box display={'flex'}>                
-                <Box component="main" sx={{ flexGrow: 1, p: 3 }}>                    
+                <Box component="main" sx={{ flexGrow: 1, p: 0 }}>                    
                     <LogoHome />
                     <CarouselHome />                     
                     <MainHome />

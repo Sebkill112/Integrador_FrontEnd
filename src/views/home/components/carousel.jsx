@@ -9,13 +9,13 @@ export default function CarouselHome() {
             url: "https://imagenes.elpais.com/resizer/yKbXjIJcf_3MKIsXCjDrGhV819E=/1960x1470/cloudfront-eu-central-1.images.arcpublishing.com/prisa/WEQBXMYURRCQRNA7LZA6XYMLZE.jpg"
         },
         {                        
-            url: "https://assets.website-files.com/60a6dd60c32dad3ddc38016c/63989f363e3dd68cff5279ca_Biblioteca.jpg"
+            url: "https://www.telemundo.com/sites/nbcutelemundo/files/images/article/cover/2018/12/17/jovenes-en-biblioteca.jpg"
         },
         {                        
             url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Biblioteca-montserrat.jpg/1200px-Biblioteca-montserrat.jpg"
         },
         {                        
-            url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-T-jKTOee7CAvQqb3t0LLxjZakCc4muYw5A&usqp=CAU"
+            url: "https://www.malagahoy.es/2020/03/12/malaga/Varias-personas-biblioteca-imagen-archivo_1445565963_118435023_1200x675.jpg"
         },
         {                        
             url: "https://www.thenewbarcelonapost.com/wp-content/uploads/2023/08/Interior-Biblioteca-Gabriel-Garcia-Marquez-Maria-Pratdesaba-ACN-1170x780.jpg"
@@ -34,8 +34,8 @@ export default function CarouselHome() {
 
 function Item(props) {
     return (
-        <div style={{ position: 'relative', marginTop: '20px' }}>            
-            <img src={props.item.url} style={{ width: "100%", height: "500px" }} />
+        <div style={{ position: 'relative', marginTop: '0px' }}>            
+            <img src={props.item.url} style={{ width: "100%", height: "750px" }} />
         </div>
     )
 }
