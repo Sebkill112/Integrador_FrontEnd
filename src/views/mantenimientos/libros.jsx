@@ -26,12 +26,31 @@ const stylesModal = {
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: "#009933"
+
   },
   box: {
     display: 'flex',
     alignItems: 'center',
-    pt: '10em'
+    pt: '10em',
+    backgroundColor: "#009933"
+  }
+};
+
+const stylesModal2 = {
+  toolbar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: "#29a3a3"
+
+  },
+  box: {
+    display: 'flex',
+    alignItems: 'center',
+    pt: '10em',
+    backgroundColor: "#29a3a3"
   }
 };
 
@@ -180,7 +199,7 @@ export default function MantemientoClientes(){
                             variant="contained"
                             style={{
                                 marginTop: 2,
-                                backgroundColor: '#ffce73',
+                                backgroundColor: '#00e64d',
                                 fontWeight: 'lighter',
                                 color: 'black',
                                 fontSize: '15px',
@@ -281,7 +300,7 @@ export default function MantemientoClientes(){
         </div>
       </CustomModal>
 
-      <CustomModal open={actualiza} handleClose={handleCloseActualiza} title="Actualizacion de Libro" styles={stylesModal}>
+      <CustomModal open={actualiza} handleClose={handleCloseActualiza} title="Actualizacion de Libro" styles={stylesModal2}>
         <div
           style={{
             // minWidth: 'calc(80vw)',

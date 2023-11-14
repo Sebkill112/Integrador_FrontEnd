@@ -28,12 +28,14 @@ const stylesModal = {
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: "1aa3ff"
   },
   box: {
     display: 'flex',
     alignItems: 'center',
-    pt: '10em'
+    pt: '10em',
+    backgroundColor: "1aa3ff"
   }
 };
 
@@ -507,7 +509,7 @@ export default function Prestamos() {
                   variant="contained"
                   style={{
                     marginTop: 2,
-                    backgroundColor: '#ffce73',
+                    backgroundColor: '#ff9900',
                     fontWeight: 'lighter',
                     color: 'black',
                     fontSize: '15px',
@@ -607,7 +609,7 @@ export default function Prestamos() {
                   variant="contained"
                   style={{
                     marginTop: 2,
-                    backgroundColor: '#00cccc',
+                    backgroundColor: '#1aa3ff',
                     fontWeight: 'lighter',
                     color: 'black',
                     fontSize: '15px',
@@ -628,7 +630,7 @@ export default function Prestamos() {
                   variant="contained"
                   style={{
                     marginTop: 2,
-                    backgroundColor: '#adff33',
+                    backgroundColor: '#00e64d',
                     fontWeight: 'lighter',
                     color: 'black',
                     fontSize: '15px',

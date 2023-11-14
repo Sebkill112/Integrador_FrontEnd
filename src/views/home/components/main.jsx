@@ -129,7 +129,7 @@ export default function MainHome() {
                     <li>Recomendaciones de libros personalizadas para descubrir nuevas lecturas.</li>
                     <li>Contenido infantil seguro y educativo.</li>
                 </ul>
-                <p style={{ fontSize: '25px', color: '#fff', paddingLeft: "50px", paddingRight: "50px", paddingTop: "30px" }}>
+                <p style={{ fontSize: '25px', color: '#000', paddingLeft: "50px", paddingRight: "50px", paddingTop: "30px" }}>
                     Únete a nuestra comunidad de amantes de la lectura y experimenta la versatilidad y la riqueza que nuestra aplicación de biblioteca en línea tiene para ofrecer. Amplía tus horizontes literarios y lleva tus libros contigo a donde quiera que vayas."
                 </p>
             </Box>

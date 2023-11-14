@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import CustomLoadingButton from "../../../components/Button/LoadingButton";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import LoginIcon from '@mui/icons-material/Login';
 
 export default function LogoHome() {
     const navigate = useNavigate();
@@ -31,15 +32,15 @@ export default function LogoHome() {
             <img src="https://files.logoscdn.com/v1/assets/13817708/optimized" alt="logo_biblioteca" style={{ width: '150px', height: '60px' }} />
             <CustomLoadingButton
                 type="submit"
-                startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
+                startIcon={<LoginIcon sx={{ height: '20px' }} />}
                 variant="contained"
                 style={{
-                    marginTop: 2,
+                    marginTop: 0,
                     backgroundColor: '#ffffff00',
                     fontWeight: 'lighter',
                     color: '#fff',
-                    fontSize: '15px',
-                    height: '28px',
+                    fontSize: '20px',
+                    height: '40px',
                 }}
                 onClick={handleToLogin}
             >
