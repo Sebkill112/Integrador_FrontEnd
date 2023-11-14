@@ -323,13 +323,19 @@ export default function DetalleDevolucion(props) {
 
   };
 
-  const calcularMora =()=> { 
+  const calcularMora =(arrDetalle, arrRegistro)=> { 
 
+    let datos = arrRegistro.length;
+    let detalle = arrDetalle.length;
+    let suma = 0.0
+    const lengthDifference = Math.abs(datos - detalle);
     const devolucion = dayjs(dataPrestamo.fechaDevolucion);
     if(devolucion.isBefore(dayjs())){
-      return 5.00
+      suma =  5.00 + (lengthDifference * 2.50)
+    }else{
+      suma = lengthDifference * 2.50
     }
-      return 0.00
+      return suma
     
   };
 
@@ -532,7 +538,7 @@ export default function DetalleDevolucion(props) {
                   name="monto"
                   type="text"
                   label="Monto a Pagar"
-                  value={calcularMora()}
+                  value={calcularMora(arrDetalle,dataPrestamo.detallePrestamo)}
                 />
               </FlexBox>
 
