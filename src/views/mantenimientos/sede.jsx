@@ -327,7 +327,7 @@ export default function MantemientoSedes(){
            <MaterialTable
            columns={columnas}
            data={sedes}
-           title="Libros de la Sede"
+           title="Sedes"
            actions={[
             {icon: 'edit',
             tooltip: 'Actualiza Sede',
@@ -341,7 +341,8 @@ export default function MantemientoSedes(){
            ]}
            options={
             {
-              actionsColumnIndex: -1
+              actionsColumnIndex: -1,
+              exportButton: true
             }
            }
            localization={{
