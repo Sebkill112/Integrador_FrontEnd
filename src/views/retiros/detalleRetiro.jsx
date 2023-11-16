@@ -159,7 +159,7 @@ export default function DetalleRetiro(props) {
       });
       setArrDetalle(arrDocumentos);
 
-      console.log('libros', arrDocumentos)
+   
 
       Swal.fire({
         icon: 'success',
@@ -191,7 +191,7 @@ export default function DetalleRetiro(props) {
         });
         setArrDetalle(arrDocumentos);
 
-        console.log('libros', arrDocumentos)
+        
 
         Swal.fire({
           icon: 'success',
@@ -242,12 +242,12 @@ export default function DetalleRetiro(props) {
             ejemplares: itemArray
           }
 
-          console.log(data)
+        
 
           try {
             const response = await http.put(`/api/prestamo/retiro/${dataPrestamo.codigo}`, data);
 
-            console.log('Response:', response.data);
+           
 
             Swal.fire({
               icon: 'success',
@@ -277,12 +277,12 @@ export default function DetalleRetiro(props) {
         ejemplares: itemArray
       }
 
-      console.log(data)
+      
 
       try {
         const response = await http.put(`/api/prestamo/retiro/${dataPrestamo.codigo}`, data);
 
-        console.log('Response:', response.data);
+       
 
         Swal.fire({
           icon: 'success',

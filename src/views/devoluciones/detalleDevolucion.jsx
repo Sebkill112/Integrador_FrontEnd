@@ -155,8 +155,6 @@ export default function DetalleDevolucion(props) {
       });
       setArrDetalle(arrDocumentos);
 
-      console.log('libros', arrDocumentos)
-
       Swal.fire({
         icon: 'success',
         title: 'Adjuntar Libro',
@@ -187,7 +185,7 @@ export default function DetalleDevolucion(props) {
         });
         setArrDetalle(arrDocumentos);
 
-        console.log('libros', arrDocumentos)
+        
 
         Swal.fire({
           icon: 'success',
@@ -249,14 +247,13 @@ export default function DetalleDevolucion(props) {
             detalleDevolucion: itemArray
           }
 
-          console.log('Response:',data);
+         
     
 
                       try {
                        const response = await http.post(`/api/devolucion/devolver/${dataPrestamo.codigo}`, data);
 
-                      console.log('Response:', response.data);
-
+                     
                       Swal.fire({
                        icon: 'success',
                       title: 'Registro de Devolucion',
@@ -293,12 +290,12 @@ export default function DetalleDevolucion(props) {
             detalleDevolucion: itemArray
           }
 
-      console.log(data)
+  
 
       try {
         const response = await http.post(`/api/devolucion/devolver/${dataPrestamo.codigo}` , data);
 
-        console.log('Response:', response.data);
+
         
         Swal.fire({
         icon: 'success',

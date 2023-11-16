@@ -57,7 +57,7 @@ export default function Devoluciones(){
       const handleOpenDetallePrestamo = (data) => {
         setPrestamo(data);
         setDetalle(true);
-        console.log(data);
+  
     };
 
 

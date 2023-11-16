@@ -40,7 +40,7 @@ const LoginPage = () => {
         
         const data = await response.json(); 
         localStorage.setItem('user', JSON.stringify(data));
-        console.log('local', JSON.parse(localStorage.getItem('user')));
+       
         const expirationDate = new Date();
         if (!isNaN(expirationDate)) { 
           expirationDate.setMinutes(expirationDate.getMinutes() + 30);
@@ -180,10 +180,15 @@ const LoginPage = () => {
                     </LoadingButton>
                   </Grid>
                 </Grid>
-                <Grid container>
+                <Grid container spacing={30}>
                   <Grid item>
                     <Link href="/registro" variant="body2">
                       {"No tienes una cuenta? Registrate aquí"}
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link href="/" variant="body2">
+                      {"Regresa al home"}
                     </Link>
                   </Grid>
                 </Grid>

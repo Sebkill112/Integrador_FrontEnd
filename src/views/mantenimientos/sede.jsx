@@ -68,9 +68,7 @@ export default function MantemientoSedes(){
   
 
     
-    const agregarLibro=(data)=>{
-      console.log(data);
-    }
+  
 
     const onchangeCodigo = (event) =>{
         setCodigo(event.target.value);
@@ -136,7 +134,7 @@ export default function MantemientoSedes(){
     //estado: 1
         }
 
-        console.log(data)
+       
 
         await http.post('/api/sede/registrar', data)
         .then((response) => {

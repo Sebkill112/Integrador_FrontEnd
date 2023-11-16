@@ -234,7 +234,7 @@ export default function Prestamos() {
       });
       setArrDetalle(arrDocumentos);
 
-      console.log('libros', arrDocumentos)
+      
 
       Swal.fire({
         icon: 'success',
@@ -271,7 +271,7 @@ export default function Prestamos() {
         });
         setArrDetalle(arrDocumentos);
 
-        console.log('libros', arrDocumentos)
+        
 
         Swal.fire({
           icon: 'success',
@@ -327,12 +327,12 @@ export default function Prestamos() {
       detallePrestamo: codigosArray
     }
 
-    console.log(data)
+    
 
     try {
       const response = await http.post('/api/prestamo/registro', data);
 
-      console.log('Response:', response.data);
+      
 
       Swal.fire({
       icon: 'success',
