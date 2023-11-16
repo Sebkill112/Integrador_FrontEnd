@@ -241,6 +241,7 @@ export default function MantemientoClientes(){
             {
               actionsColumnIndex: -1,
               exportButton: true
+              
             }
            }
            localization={{

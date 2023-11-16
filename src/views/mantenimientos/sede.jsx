@@ -343,6 +343,7 @@ export default function MantemientoSedes(){
             {
               actionsColumnIndex: -1,
               exportButton: true
+              
             }
            }
            localization={{
