@@ -25,6 +25,7 @@ import ApartmentIcon from '@mui/icons-material/Apartment';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import Swal from 'sweetalert2';
+import { LoadingButton } from '@mui/lab';
 
 const Registro = () => {
   const navigate = useNavigate();
@@ -35,13 +36,14 @@ const Registro = () => {
   const [direccion, setDireccion] = useState('');
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const validate = (values) => {
     const errors = {};
 
     if (!values.dni) {
       errors.dni = 'El campo DNI es obligatorio';
-    } else if (!/^\d{8}$/.test(values.dni)) {
+    } else if (!/^[0-9]{8}$/.test(values.dni)) {
       errors.dni = 'El DNI debe contener exactamente 8 números';
     }
 
@@ -395,10 +397,17 @@ const Registro = () => {
 
                   <Grid item xs={12} sm={12} md={6}>
                     <FormControl sx={{ height: '60px', marginTop: 3 }} fullWidth>
-                      <Button
+                      <LoadingButton
                         type="submit"
                         variant="contained"
-                        onClick={registrarRegistro}
+                        loading={isLoading}
+                        onClick={ () => {
+                          setIsLoading(true); 
+                          registrarRegistro() 
+                            .finally(() => setIsLoading(false));
+                        }
+                          
+                        }
                         disabled={areAllFieldsEmpty() || !formik.isValid}
                         sx={{
                           backgroundColor: 'success.main', color: 'white',
@@ -409,7 +418,7 @@ const Registro = () => {
                         }}
                       >
                         Registrar
-                      </Button>
+                      </LoadingButton>
                     </FormControl>
                   </Grid>
                 </Grid>

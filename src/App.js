@@ -13,6 +13,7 @@ import HomePage from './views/home/homepage';
 import Index from './views/login/bienvenida';
 import Reporte from './views/reportePrestamo/reporte';
 import ReporteDevolucion from './views/reportePrestamo/reporteDevolucion';
+import Historial from './views/prestamos/historial';
 
 
 const Private = ({Component}) => {
@@ -27,6 +28,7 @@ function App() {
         <Routes>
         <Route path="/" exact element={<HomePage />} />        
         <Route path="/login" exact element={<LoginPage />} />
+        <Route path="/historial" exact element={<Private Component={Historial} />}/>
         <Route path="/registro" exact element={<Registro />} />
         <Route path="/libros" exact element={<Private Component={MantemientoClientes} />} />
         <Route path="/index" exact element={<Private Component={Index} />} />

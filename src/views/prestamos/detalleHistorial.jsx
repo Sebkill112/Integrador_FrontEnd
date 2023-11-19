@@ -18,7 +18,6 @@ import Swal from 'sweetalert2';
 import ArticleIcon from '@mui/icons-material/Article';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import dayjs from "dayjs";
-import TablaDetalleDevolucion from "./tablaDetalleDevolcion";
 
 
 const stylesModal = {
@@ -97,16 +96,11 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function DetalleDevolucion(props) {
+export default function DetalleHistorial(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { dataPrestamo, cerrarModal } = props;
-  const [obsevacion, setObservacion] = React.useState('');
+  const { dataPrestamo } = props;
   const [detalle, setDetalle] = React.useState(false);
-  const [arrDetalle, setArrDetalle] = React.useState([]);
-  const [numero, setNumero] = React.useState([]);
-  const [mora, setMora] = React.useState(0);
-  const [monto, setMonto] = React.useState(0.0);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataPrestamo.detallePrestamo.length) : 0;
@@ -115,12 +109,7 @@ export default function DetalleDevolucion(props) {
     setPage(newPage);
   };
 
-  const onChangeObservacion = (event) => {
-
-    setObservacion(event.target.value)
-  };
-
-
+  
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -133,210 +122,11 @@ export default function DetalleDevolucion(props) {
   const handleCloseDetalle = () => {
     setDetalle(false);
   };
-  React.useEffect(() => {
-    (async () => {
-      const response = await http.get("/api/devolucion/codigo");
-      setNumero(response.data)
 
-    })();
-  }, []);
-
-  
-
-
-  const agregarLibro = (row) => {
-
-
-    if (arrDetalle.length === 0) {
-      const arrDocumentos = [];
-      arrDocumentos.push({
-        ejemplar: row,
-        item: arrDocumentos.length + 1
-      });
-      setArrDetalle(arrDocumentos);
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Adjuntar Libro',
-        text: 'Libro Adjuntado',
-        timer: 2000
-      });
-    } else {
-
-      const arrDocumentos = arrDetalle;
-
-      const maxItem = arrDocumentos.map((doc) => doc.item);
-      const maxI = Math.max(...maxItem);
-
-      const existingBook = arrDocumentos.find((libro) => libro.ejemplar.libro.codigo === row.libro.codigo);
-
-      if (existingBook) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Adjuntar Libro',
-          text: 'El libro ya fue adjuntado previamente',
-          timer: 2000
-        });
-      } else {
-        arrDocumentos.push({
-
-          ejemplar: row,
-          item: maxI + 1
-        });
-        setArrDetalle(arrDocumentos);
-
-        
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Registro de Devolucion',
-          text: 'Libro Adjuntado',
-          timer: 2000
-        });
-      }
-    }
-  };
-
-  const dataDetalle = (arrDocumentos) => {
-    setArrDetalle(arrDocumentos);
-  };
-
- 
-
-  const registrarRetiro = async () => {
 
 
 
-    if (arrDetalle.length === 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Registro de Devolucion',
-        text: 'Debe Adjuntar los libros',
-        timer: 2000
-      });
-    } else if (arrDetalle.length !== dataPrestamo.detallePrestamo.length) {
-      Swal.fire({
-        title: '¡Alerta!',
-        // eslint-disable-next-line no-useless-concat
-        html: `No adjunto algunos libros detallados en el retiro` + ' desea continuar?',
-        showCancelButton: true,
-        backdrop: false,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Si, continuar!'
-      }).then(async (result) => {
-        if (result.value) {
-          const user = JSON.parse(localStorage.getItem('user'));
-          const moraData = calcularMora(arrDetalle,dataPrestamo.detallePrestamo) === 0.0 ? 0 : 1
-          const montoData = calcularMora(arrDetalle,dataPrestamo.detallePrestamo) === 0.0 ? null : calcularMora(arrDetalle,dataPrestamo.detallePrestamo);
-          const itemArray = arrDetalle.map(item => (item.ejemplar ));
-          const data = {
-            devolucion:{
-              num_prestamo: dataPrestamo.num_prestamo,
-              num_devolucion: numero,
-              fechaDevolucion: dayjs().format('YYYY-MM-DD'),
-              observaciones: obsevacion,
-              mora: moraData,
-              monto: montoData,
-              usuario: {
-                codigo: user.codigo
-              }
-            },
-            codigoSede: dataPrestamo.sede.codigo,
-            detalleDevolucion: itemArray
-          }
-
-         
-    
-
-                      try {
-                       const response = await http.post(`/api/devolucion/devolver/${dataPrestamo.codigo}`, data);
-
-                     
-                      Swal.fire({
-                       icon: 'success',
-                      title: 'Registro de Devolucion',
-                      text: 'Registro exitoso',
-                        timer: 2000
-                      });
-
-                      cerrarModal(false)
-                    } catch (error) {
-                      // Handle the error
-                       console.error('Axios error:', error);
-                       }
-        }
-      });
-    } else {
-
-      const user = JSON.parse(localStorage.getItem('user'));
-          const moraData = calcularMora(arrDetalle,dataPrestamo.detallePrestamo) === 0.0 ? 0 : 1
-          const montoData = calcularMora(arrDetalle,dataPrestamo.detallePrestamo) === 0.0 ? null :calcularMora(arrDetalle,dataPrestamo.detallePrestamo);
-          const itemArray = arrDetalle.map(item => (item.ejemplar ));
-          const data = {
-            devolucion:{
-              num_prestamo: dataPrestamo.num_prestamo,
-              num_devolucion: numero,
-              fechaDevolucion: dayjs().format('YYYY-MM-DD'),
-              observaciones: obsevacion,
-              mora: moraData,
-              monto: montoData,
-              usuario: {
-                codigo: user.codigo
-              }
-            },
-            codigoSede: dataPrestamo.sede.codigo,
-            detalleDevolucion: itemArray
-          }
-
-    
-  
-
-      try {
-        const response = await http.post(`/api/devolucion/devolver/${dataPrestamo.codigo}` , data);
-
-
-        
-        Swal.fire({
-        icon: 'success',
-        title: 'Registro de Devolucion',
-        text: 'Registro exitoso',
-        timer: 2000
-      });
-
-      cerrarModal(false)
-
-      
-      } catch (error) {
-        // Handle the error
-        console.error('Axios error:', error);
-      }
-
-      
-
-    }
-
-  
-
-  };
-
-  const calcularMora =(arrDetalle, arrRegistro)=> { 
-
-    let datos = arrRegistro.length;
-    let detalle = arrDetalle.length;
-    let suma = 0.0
-    const lengthDifference = Math.abs(datos - detalle);
-    const devolucion = dayjs(dataPrestamo.fechaDevolucion);
-    if(devolucion.isBefore(dayjs())){
-      suma =  5.00 + (lengthDifference * 2.50)
-    }else{
-      suma = lengthDifference * 2.50
-    }
-      return suma
-    
-  };
-
+ 
   return (
     <>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -346,7 +136,7 @@ export default function DetalleDevolucion(props) {
             <Box sx={{ mt: 1, mb: 2.5, mx: 1 }}>
               <Divider>
                 <Typography variant="h4" sx={{ fontWeight: 'semibold', letterSpacing: '1px', mx: 1, color: '#555' }}>
-                  Registra tu Devolución
+                  Detalle  del Prestamo
                 </Typography>
               </Divider>
             </Box>
@@ -360,8 +150,8 @@ export default function DetalleDevolucion(props) {
                   size="small"
                   name="codigo"
                   type="text"
-                  label="Numero de Retiro"
-                  value={numero}
+                  label="Numero de Prestamo"
+                  value={dataPrestamo.num_prestamo}
                 />
               </FlexBox>
 
@@ -434,9 +224,6 @@ export default function DetalleDevolucion(props) {
                     <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }} align="rigth">
                       Edicion
                     </TableCell>
-                    <TableCell style={{ color: '#303030', fontWeight: 'bold', textAlign: 'center' }} align="rigth">
-                      Acciones
-                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -457,23 +244,6 @@ export default function DetalleDevolucion(props) {
                         </TableCell>
                         <TableCell component="th" scope="row" style={{ textAlign: 'center' }}>
                           {row.libro?.edicion}
-                        </TableCell>
-                        <TableCell align="center" style={{ justifyContent: 'center', textAlign: '-webkit-center' }}>
-                          <CustomLoadingButton
-                            type="submit"
-                            startIcon={<AddCircleIcon />}
-                            variant="contained"
-                            style={{
-                              marginTop: 2,
-                              backgroundColor: '#46d246',
-                              fontWeight: 'lighter',
-                              fontSize: '15px',
-                              height: '28px'
-                            }}
-                            onClick={() => agregarLibro(row)}
-                          >
-                            Agregar
-                          </CustomLoadingButton>
                         </TableCell>
                       </TableRow>
                     )
@@ -506,7 +276,7 @@ export default function DetalleDevolucion(props) {
 
           </Grid>
 
-          <Grid item xs={12} sm={12} md={3}>
+          <Grid item xs={12} sm={12} md={6}>
             <FormControl sx={{ height: '60px' }} fullWidth>
               <FlexBox justifyContent="end" alignItems="center" spacing="8px">
                 <ArticleIcon color="primary" fontSize="large" />
@@ -519,95 +289,14 @@ export default function DetalleDevolucion(props) {
                   maxRows={3}
                   type="text"
                   label="Observacion"
-                  value={obsevacion}
-                  onChange={onChangeObservacion}
+                  value={dataPrestamo.observaciones}
                 />
               </FlexBox>
 
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={12} md={3}>
-            <FormControl sx={{ height: '60px' }} fullWidth>
-              <FlexBox justifyContent="end" alignItems="center" spacing="8px">
-                <AttachMoneyIcon color="primary" fontSize="large" />
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="monto"
-                  type="text"
-                  label="Monto a Pagar"
-                  value={calcularMora(arrDetalle,dataPrestamo.detallePrestamo)}
-                />
-              </FlexBox>
-
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={12} md={3}>
-            <FormControl sx={{ height: '60px' }}>
-              <CustomLoadingButton
-                type="submit"
-                startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
-                variant="contained"
-                style={{
-                  marginTop: 2,
-                  backgroundColor: '#adff33',
-                  fontWeight: 'lighter',
-                  color: 'black',
-                  fontSize: '15px',
-                  height: '28px'
-                }}
-                onClick={registrarRetiro}
-              >
-                Registrar Devolucion
-              </CustomLoadingButton>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={12} md={3}>
-            <FormControl sx={{ height: '60px' }}>
-              <CustomLoadingButton
-                type="submit"
-                startIcon={<LoupeIcon sx={{ height: '15px' }} />}
-                variant="contained"
-                style={{
-                  marginTop: 2,
-                  backgroundColor: '#00cccc',
-                  fontWeight: 'lighter',
-                  color: 'black',
-                  fontSize: '15px',
-                  height: '28px'
-                }}
-                onClick={handleOpenDetalle}
-
-              >
-                Ver Detalle
-              </CustomLoadingButton>
             </FormControl>
           </Grid>
         </Grid>
       </Box>
-
-      <CustomModal open={detalle} handleClose={handleCloseDetalle} title="Detalle del Prestamo" styles={stylesModal}>
-        <div
-          style={{
-            // minWidth: 'calc(80vw)',
-            display: 'flex',
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '0',
-            margin: '0 auto'
-          }}
-        >
-          <Grid container spacing={2} justifyContent="center" alignItems="center">
-
-            <Grid item xs={12} sm={12} md={12}>
-              <TablaDetalleDevolucion propiedades={arrDetalle} datahijo={dataDetalle} />
-            </Grid>
-
-          </Grid>
-        </div>
-      </CustomModal>
     </>
   )
 }

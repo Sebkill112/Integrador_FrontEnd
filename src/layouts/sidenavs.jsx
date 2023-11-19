@@ -27,6 +27,7 @@ import BookIcon from '@mui/icons-material/Book';
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import HomeIcon from '@mui/icons-material/Home';
+import RestoreIcon from '@mui/icons-material/Restore';
 const drawerWidth = 240;
 
 
@@ -143,7 +144,9 @@ export default function Sidenavs() {
               </ListItemButton>
             </ListItem>
             }
-            {(user.rol.codigo === 1 || user.rol.codigo === 2) &&
+            {(user.rol.codigo === 1 || user.rol.codigo === 2) &&(
+
+            <>
             <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/prestamo")} >
               <ListItemButton
                 sx={{
@@ -164,7 +167,28 @@ export default function Sidenavs() {
                 <ListItemText primary="Prestamos" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-            }
+            <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/historial")} >
+            <ListItemButton
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <RestoreIcon />
+              </ListItemIcon>
+              <ListItemText primary="Historial de Prestamos" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+          </>
+            )}
             {(user.rol.codigo === 1 || user.rol.codigo === 3) &&
             <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/retiro")} >
               <ListItemButton
@@ -186,6 +210,7 @@ export default function Sidenavs() {
                 <ListItemText primary="Retiros" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
+            
             }
              {(user.rol.codigo === 1 || user.rol.codigo === 3) &&
             <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/devolucion")} >
@@ -209,29 +234,7 @@ export default function Sidenavs() {
               </ListItemButton>
             </ListItem>
             }
-            {(user.rol.codigo === 1 || user.rol.codigo === 3) &&
-            <ListItem disablePadding sx={{ display: 'block' }}onClick={()=> navigate("/retiro")} >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <BookmarkAddedIcon />
-                </ListItemIcon>
-                <ListItemText primary="Retiros" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-            }
-             {(user.rol.codigo === 1 || user.rol.codigo === 2) &&
+             {(user.rol.codigo === 1 || user.rol.codigo === 3) &&
             <><ListItem disablePadding sx={{ display: 'block' }} onClick={() => navigate("/reporte")}>
               <ListItemButton
                 sx={{
