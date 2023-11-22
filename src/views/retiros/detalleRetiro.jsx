@@ -106,6 +106,7 @@ export default function DetalleRetiro(props) {
   const [obsevacion, setObservacion] = React.useState('');
   const [detalle, setDetalle] = React.useState(false);
   const [arrDetalle, setArrDetalle] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ejemplares.length) : 0;
@@ -551,6 +552,7 @@ export default function DetalleRetiro(props) {
                 type="submit"
                 startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
                 variant="contained"
+                loading={isLoading}
                 style={{
                   marginTop: 2,
                   backgroundColor: '#adff33',
@@ -559,7 +561,11 @@ export default function DetalleRetiro(props) {
                   fontSize: '15px',
                   height: '28px'
                 }}
-                onClick={registrarRetiro}
+                onClick={
+                  () => {setIsLoading(true); 
+                    registrarRetiro()
+                    .finally(() => setIsLoading(false))}
+                  }
               >
                 Registrar Retiro
               </CustomLoadingButton>

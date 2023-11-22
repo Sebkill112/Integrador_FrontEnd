@@ -21,6 +21,8 @@ import MaterialTable from "material-table";
 import dayjs from "dayjs";
 import RegistroLibro from "./registroLibroForm";
 import ActualizacionLibro from "./actualizaLibroForm";
+import AddHomeWorkIcon from '@mui/icons-material/AddHomeWork';
+import AsignarLibroSede from "./asignarLibros";
 
 const stylesModal = {
   toolbar: {
@@ -60,6 +62,7 @@ export default function MantemientoClientes(){
     const [libros,setLibros] = React.useState([]);
     const [registro,setRegistro] = React.useState(false);
     const [actualiza,setActualiza] = React.useState(false);
+    const [asignar,setAsignar] = React.useState(false);
     const [libro,setLibro] = React.useState(null);
 
     const defaultMaterialTheme = createTheme();
@@ -108,6 +111,14 @@ export default function MantemientoClientes(){
 
       const handleCloseRegistro = () =>{
         setRegistro(false);
+      }
+      const handleOpenAsignar = () =>{
+        setAsignar(true);
+        
+      }
+
+      const handleCloseAsignar = () =>{
+        setAsignar(false);
       }
 
       const handleCloseModalRetiro = async (boleean) => {
@@ -214,7 +225,7 @@ export default function MantemientoClientes(){
 
             </Grid>
 
-
+          
             <Grid item xs={12} sm={12} md={12}>
             <div style={{ width: '100%', height: '100%' }}>
                 <link
@@ -273,6 +284,29 @@ export default function MantemientoClientes(){
             </ThemeProvider>
             </div>
             </Grid>
+            <Grid container spacing={2} justifyContent="right" alignItems="center" marginTop={5}>
+            <Grid item xs={12} sm={12} md={6}>
+            <FormControl sx={{ height: '60px' }}>
+                        <CustomLoadingButton
+                            type="submit"
+                            startIcon={<AddHomeWorkIcon sx={{ height: '15px' }} />}
+                            variant="contained"
+                            style={{
+                                marginTop: 2,
+                                backgroundColor: '#8cffff',
+                                fontWeight: 'lighter',
+                                color: 'black',
+                                fontSize: '15px',
+                                height: '28px'
+                            }}
+                            onClick={handleOpenAsignar}
+
+                        >
+                            Asignar Libro a Sede
+                        </CustomLoadingButton>
+                    </FormControl>
+                    </Grid>
+            </Grid>
         </Grid>
         </Box>
         
@@ -320,6 +354,30 @@ export default function MantemientoClientes(){
             <Grid item xs={12} sm={12} md={12}>
 
               <ActualizacionLibro cerrarModal={handleCloseModalActualiza} dataLibro={libro}/>
+            </Grid>
+
+          </Grid>
+        </div>
+      </CustomModal>
+
+      <CustomModal open={asignar} handleClose={handleCloseAsignar} title="Asignar Libro a Sede" styles={stylesModal2}>
+        <div
+          style={{
+            // minWidth: 'calc(80vw)',
+            display: 'flex',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '0',
+            margin: '0 auto'
+          }}
+        >
+          <Grid container spacing={2} justifyContent="center" alignItems="center">
+
+            <Grid item xs={12} sm={12} md={12}>
+
+              <AsignarLibroSede/>
             </Grid>
 
           </Grid>

@@ -107,6 +107,7 @@ export default function DetalleDevolucion(props) {
   const [numero, setNumero] = React.useState([]);
   const [mora, setMora] = React.useState(0);
   const [monto, setMonto] = React.useState(0.0);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataPrestamo.detallePrestamo.length) : 0;
@@ -548,6 +549,7 @@ export default function DetalleDevolucion(props) {
                 type="submit"
                 startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
                 variant="contained"
+                loading={isLoading}
                 style={{
                   marginTop: 2,
                   backgroundColor: '#adff33',
@@ -556,7 +558,12 @@ export default function DetalleDevolucion(props) {
                   fontSize: '15px',
                   height: '28px'
                 }}
-                onClick={registrarRetiro}
+                onClick={
+                  () => {setIsLoading(true); 
+                    registrarRetiro()
+                    .finally(() => setIsLoading(false))}
+
+                }
               >
                 Registrar Devolucion
               </CustomLoadingButton>

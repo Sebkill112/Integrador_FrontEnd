@@ -115,6 +115,7 @@ export default function Prestamos() {
   const actual = new Date();
   const [retiro] = React.useState(actual.setDate(actual.getDate()+3));
   const [devolucion] = React.useState(actual.setDate(actual.getDate()+10));
+  const [isLoading, setIsLoading] = React.useState(false);
   const tableRef = React.createRef();
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - libros.length) : 0;
@@ -628,6 +629,7 @@ export default function Prestamos() {
                   type="submit"
                   startIcon={<AddCircleIcon sx={{ height: '15px' }} />}
                   variant="contained"
+                  loading={isLoading}
                   style={{
                     marginTop: 2,
                     backgroundColor: '#00e64d',
@@ -636,7 +638,9 @@ export default function Prestamos() {
                     fontSize: '15px',
                     height: '28px'
                   }}
-                  onClick={registrarPrestamo}
+                  onClick={() => {setIsLoading(true); 
+                    registrarPrestamo()
+                    .finally(() => setIsLoading(false))}}
                 >
                   Registrar Prestamo
                 </CustomLoadingButton>
